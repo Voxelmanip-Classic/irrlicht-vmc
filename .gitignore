@@ -19,3 +19,4 @@ scripts/glext.h
 *.dir/
 *.sln
 *visualstudio/
+build/
