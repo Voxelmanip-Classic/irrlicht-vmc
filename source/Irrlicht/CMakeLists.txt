@@ -484,7 +484,6 @@ add_library(IRRGUIOBJ OBJECT
 	CGUIComboBox.cpp
 	CGUIEditBox.cpp
 	CGUIEnvironment.cpp
-	CGUIFileOpenDialog.cpp
 	CGUIFont.cpp
 	CGUIImage.cpp
 	CGUIListBox.cpp

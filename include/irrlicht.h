@@ -66,7 +66,6 @@
 #include "IGUIEditBox.h"
 #include "IGUIElement.h"
 #include "IGUIEnvironment.h"
-#include "IGUIFileOpenDialog.h"
 #include "IGUIFont.h"
 #include "IGUIFontBitmap.h"
 #include "IGUIImage.h"

@@ -40,7 +40,6 @@ class IGUIImage;
 class IGUICheckBox;
 class IGUIListBox;
 class IGUIImageList;
-class IGUIFileOpenDialog;
 class IGUIStaticText;
 class IGUIEditBox;
 class IGUITabControl;
@@ -61,7 +60,7 @@ class IGUIEnvironment : public virtual IReferenceCounted
 public:
 
 	//! Draws all gui elements by traversing the GUI environment starting at the root node.
-	/** \param  When true ensure the GuiEnvironment (aka the RootGUIElement) has the same size as the current driver screensize. 
+	/** \param  When true ensure the GuiEnvironment (aka the RootGUIElement) has the same size as the current driver screensize.
 	            Can be set to false to control that size yourself, p.E when not the full size should be used for UI. */
 	virtual void drawAll(bool useScreenSize=true) = 0;
 
@@ -288,24 +287,6 @@ public:
 	virtual IGUIListBox* addListBox(const core::rect<s32>& rectangle,
 		IGUIElement* parent=0, s32 id=-1, bool drawBackground=false) = 0;
 
-	//! Adds a file open dialog.
-	/** \param title Text to be displayed as the title of the dialog.
-	\param modal Defines if the dialog is modal. This means, that all other
-	gui elements which were created before the message box cannot be used
-	until this messagebox is removed.
-	\param parent Parent gui element of the dialog.
-	\param id Id to identify the gui element.
-	\param restoreCWD If set to true, the current working directory will be
-	restored after the dialog is closed in some way. Otherwise the working
-	directory will be the one that the file dialog was last showing.
-	\param startDir Optional path for which the file dialog will be opened.
-	\return Pointer to the created file open dialog. Returns 0 if an error
-	occurred. This pointer should not be dropped. See
-	IReferenceCounted::drop() for more information. */
-	virtual IGUIFileOpenDialog* addFileOpenDialog(const wchar_t* title=0,
-		bool modal=true, IGUIElement* parent=0, s32 id=-1,
-		bool restoreCWD=false, io::path::char_type* startDir=0) = 0;
-
 	//! Adds a static text.
 	/** \param text Text to be displayed. Can be altered after creation by SetText().
 	\param rectangle Rectangle specifying the borders of the static text
@@ -404,10 +385,10 @@ public:
 	//! Adds a IGUIElement to deletion queue.
 	/** Queued elements will be removed at the end of each drawAll call.
 	Or latest in the destructor of the GUIEnvironment.
-	This can be used to allow an element removing itself safely in a function 
-	iterating over gui elements, like an overloaded	IGUIElement::draw or 
+	This can be used to allow an element removing itself safely in a function
+	iterating over gui elements, like an overloaded	IGUIElement::draw or
 	IGUIElement::OnPostRender function.
-	Note that in general just calling IGUIElement::remove() is enough. 
+	Note that in general just calling IGUIElement::remove() is enough.
 	Unless you create your own GUI elements removing themselves you won't need it.
 	\param element: Element to remove */
 	virtual void addToDeletionQueue(IGUIElement* element) = 0;

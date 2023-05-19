@@ -16,7 +16,6 @@
 #include "CGUICheckBox.h"
 #include "CGUIListBox.h"
 #include "CGUIImageList.h"
-#include "CGUIFileOpenDialog.h"
 #include "CGUIStaticText.h"
 #include "CGUIEditBox.h"
 #include "CGUITabControl.h"
@@ -784,25 +783,6 @@ IGUIListBox* CGUIEnvironment::addListBox(const core::rect<s32>& rectangle,
 	b->drop();
 	return b;
 }
-
-
-//! adds a file open dialog. The returned pointer must not be dropped.
-IGUIFileOpenDialog* CGUIEnvironment::addFileOpenDialog(const wchar_t* title,
-				bool modal, IGUIElement* parent, s32 id,
-				bool restoreCWD, io::path::char_type* startDir)
-{
-	parent = parent ? parent : this;
-
-	if (modal)
-		return nullptr;
-
-	IGUIFileOpenDialog* d = new CGUIFileOpenDialog(title, this, parent, id,
-			restoreCWD, startDir);
-	d->drop();
-
-	return d;
-}
-
 
 //! adds a static text. The returned pointer must not be dropped.
 IGUIStaticText* CGUIEnvironment::addStaticText(const wchar_t* text,
