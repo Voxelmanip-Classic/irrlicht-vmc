@@ -6,7 +6,6 @@
 #include "CFileSystem.h"
 #include "IReadFile.h"
 #include "IWriteFile.h"
-#include "CZipReader.h"
 #include "CFileList.h"
 #include "stdio.h"
 #include "os.h"
@@ -52,8 +51,6 @@ CFileSystem::CFileSystem()
 	setFileListSystem(FILESYSTEM_NATIVE);
 	//! reset current working directory
 	getWorkingDirectory();
-
-	ArchiveLoader.push_back(new CArchiveLoaderZIP(this));
 
 }
 

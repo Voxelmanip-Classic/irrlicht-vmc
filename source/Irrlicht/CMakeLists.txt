@@ -432,7 +432,6 @@ add_library(IRRIOOBJ OBJECT
 	CMemoryFile.cpp
 	CReadFile.cpp
 	CWriteFile.cpp
-	CZipReader.cpp
 	CAttributes.cpp
 )
 

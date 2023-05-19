@@ -13,8 +13,6 @@ namespace irr
 namespace io
 {
 
-	class CZipReader;
-
 /*!
 	FileSystem which uses normal files and one zipfile
 */
