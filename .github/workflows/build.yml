@@ -17,7 +17,7 @@ jobs:
       - name: Install deps
         run: |
           apt-get update
-          apt-get install g++ cmake libxi-dev libgl1-mesa-dev libpng-dev libjpeg-dev zlib1g-dev -qyy
+          apt-get install g++ cmake libxi-dev libgl1-mesa-dev libpng-dev zlib1g-dev -qyy
 
       - name: Build
         run: |
@@ -44,7 +44,7 @@ jobs:
       - name: Install deps
         run: |
           apt-get update
-          apt-get install g++ cmake libxi-dev libgles2-mesa-dev libpng-dev libjpeg-dev zlib1g-dev xvfb -qyy
+          apt-get install g++ cmake libxi-dev libgles2-mesa-dev libpng-dev zlib1g-dev xvfb -qyy
 
       - name: Build
         run: |
@@ -71,7 +71,7 @@ jobs:
       - name: Install deps
         run: |
           apt-get update
-          apt-get install g++ cmake libsdl2-dev libpng-dev libjpeg-dev zlib1g-dev -qyy
+          apt-get install g++ cmake libsdl2-dev libpng-dev zlib1g-dev -qyy
 
       - name: Build
         run: |
@@ -93,7 +93,7 @@ jobs:
       - name: Install deps
         run: |
           apt-get update
-          apt-get install g++ cmake libsdl2-dev libpng-dev libjpeg-dev zlib1g-dev xvfb -qyy
+          apt-get install g++ cmake libsdl2-dev libpng-dev zlib1g-dev xvfb -qyy
 
       - name: Build
         run: |
@@ -120,7 +120,7 @@ jobs:
       - name: Install deps
         run: |
           apt-get update
-          apt-get install g++ cmake libsdl2-dev libpng-dev libjpeg-dev zlib1g-dev xvfb -qyy
+          apt-get install g++ cmake libsdl2-dev libpng-dev zlib1g-dev xvfb -qyy
 
       - name: Build
         run: |
@@ -188,7 +188,7 @@ jobs:
       - name: Install deps
         run: |
           brew update
-          brew install cmake libpng jpeg
+          brew install cmake libpng
 
       - name: Build
         run: |
@@ -205,7 +205,7 @@ jobs:
     env:
       VCPKG_VERSION: 14e7bb4ae24616ec54ff6b2f6ef4e8659434ea44
         # 2022.05.10
-      vcpkg_packages: zlib libpng libjpeg-turbo opengl-registry
+      vcpkg_packages: zlib libpng opengl-registry
     strategy:
       fail-fast: false
       matrix:

@@ -23,9 +23,6 @@ namespace irr
 namespace video
 {
 
-//! creates a loader which is able to load jpeg images
-IImageLoader* createImageLoaderJPG();
-
 //! creates a loader which is able to load targa images
 IImageLoader* createImageLoaderTGA();
 
@@ -79,7 +76,6 @@ CNullDriver::CNullDriver(io::IFileSystem* io, const core::dimension2d<u32>& scre
 	// create surface loaders and writers
 	SurfaceLoader.push_back(video::createImageLoaderTGA());
 	SurfaceLoader.push_back(video::createImageLoaderPNG());
-	SurfaceLoader.push_back(video::createImageLoaderJPG());
 
 	SurfaceWriter.push_back(video::createImageWriterPNG());
 

@@ -246,7 +246,6 @@ message(STATUS "WebGL: ${ENABLE_WEBGL1}")
 # Required libs
 
 find_package(ZLIB REQUIRED)
-find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
 
 
@@ -291,7 +290,6 @@ set(link_includes
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 
 	"${ZLIB_INCLUDE_DIR}"
-	"${JPEG_INCLUDE_DIR}"
 	"${PNG_INCLUDE_DIR}"
 	"$<$<BOOL:${USE_SDL2}>:${SDL2_INCLUDE_DIRS}>"
 
@@ -305,7 +303,6 @@ set(link_includes
 
 set(link_libs
 	"${ZLIB_LIBRARY}"
-	"${JPEG_LIBRARY}"
 	"${PNG_LIBRARY}"
 	"$<$<BOOL:${USE_SDL2}>:${SDL2_LIBRARIES}>"
 
@@ -381,7 +378,6 @@ endif()
 set(IRRIMAGEOBJ
 	CColorConverter.cpp
 	CImage.cpp
-	CImageLoaderJPG.cpp
 	CImageLoaderPNG.cpp
 	CImageLoaderTGA.cpp
 	CImageWriterPNG.cpp
