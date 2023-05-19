@@ -34,12 +34,6 @@ enum EGUI_ELEMENT_TYPE
 	//! An edit box (IGUIEditBox)
 	EGUIET_EDIT_BOX,
 
-	//! A file open dialog (IGUIFileOpenDialog)
-	EGUIET_FILE_OPEN_DIALOG,
-
-	//! A color select open dialog (IGUIColorSelectDialog)
-	EGUIET_COLOR_SELECT_DIALOG,
-
 	//! A in/out fader (IGUIInOutFader)
 	EGUIET_IN_OUT_FADER,
 
@@ -97,38 +91,6 @@ enum EGUI_ELEMENT_TYPE
 	//! This enum is never used, it only forces the compiler to compile this enumeration to 32 bit.
 	EGUIET_FORCE_32_BIT = 0x7fffffff
 
-};
-
-//! Names for built-in element types
-const c8* const GUIElementTypeNames[] =
-{
-	"button",
-	"checkBox",
-	"comboBox",
-	"contextMenu",
-	"menu",
-	"editBox",
-	"fileOpenDialog",
-	"colorSelectDialog",
-	"inOutFader",
-	"image",
-	"listBox",
-	"meshViewer",
-	"messageBox",
-	"modalScreen",
-	"scrollBar",
-	"spinBox",
-	"staticText",
-	"tab",
-	"tabControl",
-	"table",
-	"toolBar",
-	"treeview",
-	"window",
-	"element",
-	"root",
-	"profiler",
-	0
 };
 
 } // end namespace gui

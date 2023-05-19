@@ -61,16 +61,6 @@ namespace gui
 		\param index: The sprite index used to draw this icon */
 		void setIcon(EGUI_DEFAULT_ICON icon, u32 index) override;
 
-		//! Returns a default text.
-		/** For example for Message box button captions:
-		"OK", "Cancel", "Yes", "No" and so on. */
-		const wchar_t* getDefaultText(EGUI_DEFAULT_TEXT text) const override;
-
-		//! Sets a default text.
-		/** For example for Message box button captions:
-		"OK", "Cancel", "Yes", "No" and so on. */
-		void setDefaultText(EGUI_DEFAULT_TEXT which, const wchar_t* newText) override;
-
 		//! draws a standard 3d button pane
 		/** Used for drawing for example buttons in normal state.
 		It uses the colors EGDC_3D_DARK_SHADOW, EGDC_3D_HIGH_LIGHT, EGDC_3D_SHADOW and
@@ -220,7 +210,6 @@ namespace gui
 		u32 Icons[EGDI_COUNT];
 		IGUIFont* Fonts[EGDF_COUNT];
 		IGUISpriteBank* SpriteBank;
-		core::stringw Texts[EGDT_COUNT];
 		video::IVideoDriver* Driver;
 		bool UseGradient;
 

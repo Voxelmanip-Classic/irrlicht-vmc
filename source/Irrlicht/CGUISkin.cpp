@@ -125,15 +125,6 @@ CGUISkin::CGUISkin(EGUI_SKIN_TYPE type, video::IVideoDriver* driver)
 	Sizes[EGDS_BUTTON_PRESSED_SPRITE_OFFSET_X] = 0;
 	Sizes[EGDS_BUTTON_PRESSED_SPRITE_OFFSET_Y] = 0;
 
-	Texts[EGDT_MSG_BOX_OK] = L"OK";
-	Texts[EGDT_MSG_BOX_CANCEL] = L"Cancel";
-	Texts[EGDT_MSG_BOX_YES] = L"Yes";
-	Texts[EGDT_MSG_BOX_NO] = L"No";
-	Texts[EGDT_WINDOW_CLOSE] = L"Close";
-	Texts[EGDT_WINDOW_RESTORE] = L"Restore";
-	Texts[EGDT_WINDOW_MINIMIZE] = L"Minimize";
-	Texts[EGDT_WINDOW_MAXIMIZE] = L"Maximize";
-
 	Icons[EGDI_WINDOW_MAXIMIZE] = 225;
 	Icons[EGDI_WINDOW_RESTORE] = 226;
 	Icons[EGDI_WINDOW_CLOSE] = 227;
@@ -278,26 +269,6 @@ void CGUISkin::setIcon(EGUI_DEFAULT_ICON icon, u32 index)
 {
 	if ((u32)icon < EGDI_COUNT)
 		Icons[icon] = index;
-}
-
-
-//! Returns a default text. For example for Message box button captions:
-//! "OK", "Cancel", "Yes", "No" and so on.
-const wchar_t* CGUISkin::getDefaultText(EGUI_DEFAULT_TEXT text) const
-{
-	if ((u32)text < EGDT_COUNT)
-		return Texts[text].c_str();
-	else
-		return Texts[0].c_str();
-}
-
-
-//! Sets a default text. For example for Message box button captions:
-//! "OK", "Cancel", "Yes", "No" and so on.
-void CGUISkin::setDefaultText(EGUI_DEFAULT_TEXT which, const wchar_t* newText)
-{
-	if ((u32)which < EGDT_COUNT)
-		Texts[which] = newText;
 }
 
 

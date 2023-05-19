@@ -45,17 +45,6 @@ namespace gui
 		EGST_COUNT
 	};
 
-	//! Names for gui element types
-	const c8* const GUISkinTypeNames[EGST_COUNT+1] =
-	{
-		"windowsClassic",
-		"windowsMetallic",
-		"burning",
-		"unknown",
-		0,
-	};
-
-
 	//! Enumeration for skin colors
 	enum EGUI_DEFAULT_COLOR
 	{
@@ -232,43 +221,6 @@ namespace gui
 	};
 
 
-	enum EGUI_DEFAULT_TEXT
-	{
-		//! Text for the OK button on a message box
-		EGDT_MSG_BOX_OK = 0,
-		//! Text for the Cancel button on a message box
-		EGDT_MSG_BOX_CANCEL,
-		//! Text for the Yes button on a message box
-		EGDT_MSG_BOX_YES,
-		//! Text for the No button on a message box
-		EGDT_MSG_BOX_NO,
-		//! Tooltip text for window close button
-		EGDT_WINDOW_CLOSE,
-		//! Tooltip text for window maximize button
-		EGDT_WINDOW_MAXIMIZE,
-		//! Tooltip text for window minimize button
-		EGDT_WINDOW_MINIMIZE,
-		//! Tooltip text for window restore button
-		EGDT_WINDOW_RESTORE,
-
-		//! this value is not used, it only specifies the number of default texts
-		EGDT_COUNT
-	};
-
-	//! Names for default skin sizes
-	const c8* const GUISkinTextNames[EGDT_COUNT+1] =
-	{
-		"MessageBoxOkay",
-		"MessageBoxCancel",
-		"MessageBoxYes",
-		"MessageBoxNo",
-		"WindowButtonClose",
-		"WindowButtonMaximize",
-		"WindowButtonMinimize",
-		"WindowButtonRestore",
-		0
-	};
-
 	//! Customizable symbols for GUI
 	enum EGUI_DEFAULT_ICON
 	{
@@ -393,16 +345,6 @@ namespace gui
 
 		//! returns size for the given size type
 		virtual s32 getSize(EGUI_DEFAULT_SIZE size) const = 0;
-
-		//! Returns a default text.
-		/** For example for Message box button captions:
-		"OK", "Cancel", "Yes", "No" and so on. */
-		virtual const wchar_t* getDefaultText(EGUI_DEFAULT_TEXT text) const = 0;
-
-		//! Sets a default text.
-		/** For example for Message box button captions:
-		"OK", "Cancel", "Yes", "No" and so on. */
-		virtual void setDefaultText(EGUI_DEFAULT_TEXT which, const wchar_t* newText) = 0;
 
 		//! sets a default size
 		virtual void setSize(EGUI_DEFAULT_SIZE which, s32 size) = 0;
