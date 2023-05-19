@@ -32,9 +32,6 @@ IImageLoader* createImageLoaderTGA();
 //! creates a loader which is able to load png images
 IImageLoader* createImageLoaderPNG();
 
-//! creates a writer which is able to save jpg images
-IImageWriter* createImageWriterJPG();
-
 //! creates a writer which is able to save png images
 IImageWriter* createImageWriterPNG();
 
@@ -84,7 +81,6 @@ CNullDriver::CNullDriver(io::IFileSystem* io, const core::dimension2d<u32>& scre
 	SurfaceLoader.push_back(video::createImageLoaderPNG());
 	SurfaceLoader.push_back(video::createImageLoaderJPG());
 
-	SurfaceWriter.push_back(video::createImageWriterJPG());
 	SurfaceWriter.push_back(video::createImageWriterPNG());
 
 

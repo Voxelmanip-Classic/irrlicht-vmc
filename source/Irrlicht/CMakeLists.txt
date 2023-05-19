@@ -384,7 +384,6 @@ set(IRRIMAGEOBJ
 	CImageLoaderJPG.cpp
 	CImageLoaderPNG.cpp
 	CImageLoaderTGA.cpp
-	CImageWriterJPG.cpp
 	CImageWriterPNG.cpp
 )
 

@@ -869,23 +869,6 @@ IGUIFont* CGUIEnvironment::getFont(const io::path& filename)
 	}
 
 	IGUIFont* ifont=0;
-#if 0
-		{
-			CGUIFont* font = new CGUIFont(this, filename);
-			ifont = (IGUIFont*)font;
-
-			// load the font
-			io::path directory;
-			core::splitFilename(filename, &directory);
-			if (!font->load(xml, directory))
-			{
-				font->drop();
-				font  = 0;
-				ifont = 0;
-			}
-		}
-#endif
-
 
 	if (!ifont)
 	{
