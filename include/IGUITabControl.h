@@ -129,15 +129,6 @@ namespace gui
 		IGUITab(IGUIEnvironment* environment, IGUIElement* parent, s32 id, core::rect<s32> rectangle)
 			: IGUIElement(EGUIET_TAB, environment, parent, id, rectangle) {}
 
-		//! Returns zero based index of tab if in tabcontrol.
-		/** \deprecated Deprecated in 1.9, use IGUITabControl::getTabIndex instead*/
-		_IRR_DEPRECATED_ virtual s32 getNumber() const
-		{
-			if (Parent && Parent->getType() == EGUIET_TAB_CONTROL)
-				return static_cast<IGUITabControl*>(Parent)->getTabIndex(this);
-			return -1;
-		}
-
 		//! sets if the tab should draw its background
 		virtual void setDrawBackground(bool draw=true) = 0;
 

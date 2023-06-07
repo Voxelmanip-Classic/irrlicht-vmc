@@ -79,15 +79,6 @@ void CBillboardSceneNode::render()
 	driver->setTransform(video::ETS_WORLD, core::IdentityMatrix);
 	driver->setMaterial(Buffer->Material);
 	driver->drawMeshBuffer(Buffer);
-
-	if (DebugDataVisible & scene::EDS_BBOX)
-	{
-		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-		video::SMaterial m;
-		m.Lighting = false;
-		driver->setMaterial(m);
-		driver->draw3DBox(BBoxSafe, video::SColor(0,208,195,152));
-	}
 }
 
 void CBillboardSceneNode::updateMesh(const irr::scene::ICameraSceneNode* camera)

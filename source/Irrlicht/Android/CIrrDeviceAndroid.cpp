@@ -9,8 +9,6 @@
 
 #include "os.h"
 #include "CFileSystem.h"
-#include "CAndroidAssetReader.h"
-#include "CAndroidAssetFileArchive.h"
 #include "CKeyEventWrapper.h"
 #include "CEGLManager.h"
 #include "ISceneManager.h"
@@ -280,10 +278,6 @@ void CIrrDeviceAndroid::handleAndroidCommand(android_app* app, int32_t cmd)
 
 			if (!device->Initialized)
 			{
-				io::CAndroidAssetFileArchive* assets = new io::CAndroidAssetFileArchive( device->Android->activity->assetManager, false, false);
-				assets->addDirectoryToFileList("");
-				device->FileSystem->addFileArchive(assets);
-				assets->drop();
 
 				device->createDriver();
 
@@ -535,11 +529,7 @@ void CIrrDeviceAndroid::createDriver()
 	case video::EDT_NULL:
 		VideoDriver = video::createNullDriver(FileSystem, CreationParams.WindowSize);
 		break;
-	case video::EDT_SOFTWARE:
-	case video::EDT_BURNINGSVIDEO:
 	case video::EDT_OPENGL:
-	case video::DEPRECATED_EDT_DIRECT3D8_NO_LONGER_EXISTS:
-	case video::EDT_DIRECT3D9:
 		os::Printer::log("This driver is not available in Android. Try OpenGL ES 1.0 or ES 2.0.", ELL_ERROR);
 		break;
 	default:

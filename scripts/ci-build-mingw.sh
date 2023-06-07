@@ -35,7 +35,7 @@ if [ "$1" = "package" ]; then
 	# strip library
 	"${CXX%-*}-strip" --strip-unneeded _install/usr/local/lib/*.dll
 	# bundle the DLLs that are specific to Irrlicht (kind of a hack)
-	cp -p $libs/*/bin/lib{png}*.dll _install/usr/local/lib/
+	cp -p $libs/*/bin/libpng*.dll _install/usr/local/lib/
 	# create a ZIP
 	(cd _install/usr/local; zip -9r "$OLDPWD"/irrlicht-$variant.zip -- *)
 fi

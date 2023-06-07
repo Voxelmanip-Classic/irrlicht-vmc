@@ -135,18 +135,6 @@ namespace scene
 		//! Adds a scene node to the deletion queue.
 		void addToDeletionQueue(ISceneNode* node) override;
 
-		//! Returns the first scene node with the specified id.
-		ISceneNode* getSceneNodeFromId(s32 id, ISceneNode* start=0) override;
-
-		//! Returns the first scene node with the specified name.
-		ISceneNode* getSceneNodeFromName(const c8* name, ISceneNode* start=0) override;
-
-		//! Returns the first scene node with the specified type.
-		ISceneNode* getSceneNodeFromType(scene::ESCENE_NODE_TYPE type, ISceneNode* start=0) override;
-
-		//! returns scene nodes by type.
-		void getSceneNodesFromType(ESCENE_NODE_TYPE type, core::array<scene::ISceneNode*>& outNodes, ISceneNode* start=0) override;
-
 		//! Posts an input event to the environment. Usually you do not have to
 		//! use this method, it is used by the internal engine.
 		bool postEventFromUser(const SEvent& event) override;
@@ -168,9 +156,6 @@ namespace scene
 
 		//! Returns type of the scene node
 		ESCENE_NODE_TYPE getType() const override { return ESNT_SCENE_MANAGER; }
-
-		//! Returns a mesh writer implementation if available
-		IMeshWriter* createMeshWriter(EMESH_WRITER_TYPE type) override;
 
 		//! Get a skinned mesh, which is not available as header-only code
 		ISkinnedMesh* createSkinnedMesh() override;

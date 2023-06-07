@@ -66,12 +66,6 @@ if(NOT REVISION_SANITY_CHECK)
 	message(FATAL_ERROR "IrrlichtMt revision number mismatches between CMake and headers.")
 endif()
 
-# Platform-independent configuration (hard-coded currently)
-add_definitions(
-	-DIRR_ENABLE_BUILTIN_FONT
-	-D_IRR_COMPILE_WITH_SKINNED_MESH_SUPPORT_
-)
-
 # Platform-specific configuration
 
 if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
@@ -88,10 +82,8 @@ elseif(APPLE)
 	set(DEVICE "OSX")
 elseif(ANDROID)
 	add_definitions(-D_IRR_ANDROID_PLATFORM_ -D_IRR_COMPILE_ANDROID_ASSET_READER_)
-	if(USE_SDL2)
-		message(FATAL_ERROR "SDL2 device is not (yet) supported on Android")
-	endif()
-	set(DEVICE "Android")
+
+	set(DEVICE "ANDROID")
 elseif(EMSCRIPTEN)
 	add_definitions(-D_IRR_EMSCRIPTEN_PLATFORM_ -D_IRR_COMPILE_WITH_EGL_MANAGER_)
 	set(LINUX_PLATFORM TRUE)
@@ -153,7 +145,7 @@ if(EMSCRIPTEN OR APPLE)
 	set(ENABLE_GLES1 FALSE)
 else()
 	if(ANDROID)
-		set(DEFAULT_GLES1 TRUE)
+		set(DEFAULT_GLES1 FALSE)
 	endif()
 	option(ENABLE_GLES1 "Enable OpenGL ES" ${DEFAULT_GLES1})
 endif()
@@ -201,14 +193,14 @@ if(ENABLE_GLES1)
 		message(FATAL_ERROR "OpenGL ES 1 is not supported with SDL2")
 	endif()
 	add_definitions(-D_IRR_COMPILE_WITH_OGLES1_)
-	if(DEVICE MATCHES "^(WINDOWS|X11|Android)$")
+	if(DEVICE MATCHES "^(WINDOWS|X11|ANDROID)$")
 		add_definitions(-D_IRR_COMPILE_WITH_EGL_MANAGER_ -D_IRR_OGLES1_USE_EXTPOINTER_)
 	endif()
 endif()
 
 if(ENABLE_GLES2)
 	add_definitions(-D_IRR_COMPILE_WITH_OGLES2_)
-	if(DEVICE MATCHES "^(WINDOWS|X11|Android)$" OR EMSCRIPTEN)
+	if(DEVICE MATCHES "^(WINDOWS|X11|ANDROID)$" OR EMSCRIPTEN)
 		add_definitions(-D_IRR_COMPILE_WITH_EGL_MANAGER_ -D_IRR_OGLES2_USE_EXTPOINTER_)
 	elseif(DEVICE STREQUAL "SDL")
 		set(USE_SDLGL ON)
@@ -271,7 +263,6 @@ endif()
 
 if(ANDROID)
 	enable_language(C)
-	add_library(native_app_glue STATIC ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
 elseif(APPLE)
 	find_library(COCOA_LIB Cocoa REQUIRED)
 	find_library(IOKIT_LIB IOKit REQUIRED)
@@ -311,7 +302,7 @@ set(link_libs
 	${OPENGLES2_LIBRARIES}
 	${EGL_LIBRARY}
 
-	"$<$<PLATFORM_ID:Android>:native_app_glue -landroid -llog>"
+	"$<$<PLATFORM_ID:Android>:-landroid -llog>"
 	${COCOA_LIB}
 	${IOKIT_LIB}
 	"$<$<PLATFORM_ID:Windows>:gdi32>"
@@ -325,7 +316,7 @@ set(link_libs
 set(IRRMESHLOADER
 	CB3DMeshFileLoader.cpp
 	COBJMeshFileLoader.cpp
-	CXMeshFileLoader.cpp
+	#CXMeshFileLoader.cpp
 )
 
 add_library(IRRMESHOBJ OBJECT
@@ -448,8 +439,6 @@ endif()
 if(ANDROID)
 	target_sources(IRROTHEROBJ PRIVATE
 		Android/CIrrDeviceAndroid.cpp
-		Android/CAndroidAssetReader.cpp
-		Android/CAndroidAssetFileArchive.cpp
 		Android/CKeyEventWrapper.cpp
 	)
 elseif(APPLE)
@@ -533,13 +522,8 @@ if(WIN32)
 endif()
 
 # Installation of library
-if(ANDROID)
-	set(INSTALL_TARGETS IrrlichtMt native_app_glue)
-else()
-	set(INSTALL_TARGETS IrrlichtMt)
-endif()
 
-install(TARGETS ${INSTALL_TARGETS}
+install(TARGETS IrrlichtMt
 	EXPORT IrrlichtMt-export
 	DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )

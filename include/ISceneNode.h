@@ -45,8 +45,8 @@ namespace scene
 				const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f))
 			: RelativeTranslation(position), RelativeRotation(rotation), RelativeScale(scale),
 				Parent(0), SceneManager(mgr), ID(id),
-				AutomaticCullingState(EAC_BOX), DebugDataVisible(EDS_OFF),
-				IsVisible(true), IsDebugObject(false)
+				AutomaticCullingState(EAC_BOX),
+				IsVisible(true)
 		{
 			if (parent)
 				parent->addChild(this);
@@ -479,44 +479,6 @@ namespace scene
 			return AutomaticCullingState;
 		}
 
-
-		//! Sets if debug data like bounding boxes should be drawn.
-		/** A bitwise OR of the types from @ref irr::scene::E_DEBUG_SCENE_TYPE.
-		Please note that not all scene nodes support all debug data types.
-		\param state The debug data visibility state to be used. */
-		virtual void setDebugDataVisible(u32 state)
-		{
-			DebugDataVisible = state;
-		}
-
-		//! Returns if debug data like bounding boxes are drawn.
-		/** \return A bitwise OR of the debug data values from
-		@ref irr::scene::E_DEBUG_SCENE_TYPE that are currently visible. */
-		u32 isDebugDataVisible() const
-		{
-			return DebugDataVisible;
-		}
-
-
-		//! Sets if this scene node is a debug object.
-		/** Debug objects have some special properties, for example they can be easily
-		excluded from collision detection or from serialization, etc. */
-		void setIsDebugObject(bool debugObject)
-		{
-			IsDebugObject = debugObject;
-		}
-
-
-		//! Returns if this scene node is a debug object.
-		/** Debug objects have some special properties, for example they can be easily
-		excluded from collision detection or from serialization, etc.
-		\return If this node is a debug object, true is returned. */
-		bool isDebugObject() const
-		{
-			return IsDebugObject;
-		}
-
-
 		//! Returns a const reference to the list of all children.
 		/** \return The list of all children of this node. */
 		const std::list<ISceneNode*>& getChildren() const
@@ -600,9 +562,7 @@ namespace scene
 			RelativeScale = toCopyFrom->RelativeScale;
 			ID = toCopyFrom->ID;
 			AutomaticCullingState = toCopyFrom->AutomaticCullingState;
-			DebugDataVisible = toCopyFrom->DebugDataVisible;
 			IsVisible = toCopyFrom->IsVisible;
-			IsDebugObject = toCopyFrom->IsDebugObject;
 
 			if (newManager)
 				SceneManager = newManager;
@@ -657,14 +617,9 @@ namespace scene
 		//! Automatic culling state
 		u32 AutomaticCullingState;
 
-		//! Flag if debug data should be drawn, such as Bounding Boxes.
-		u32 DebugDataVisible;
-
 		//! Is the node visible?
 		bool IsVisible;
 
-		//! Is debug object?
-		bool IsDebugObject;
 	};
 
 

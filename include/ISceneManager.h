@@ -13,7 +13,6 @@
 #include "dimension2d.h"
 #include "SColor.h"
 #include "ESceneNodeTypes.h"
-#include "EMeshWriterEnums.h"
 #include "SceneParameters.h"
 #include "ISkinnedMesh.h"
 
@@ -109,7 +108,6 @@ namespace scene
 	class IMeshLoader;
 	class IMeshManipulator;
 	class IMeshSceneNode;
-	class IMeshWriter;
 	class ISceneNode;
 	class ISceneNodeFactory;
 
@@ -442,46 +440,6 @@ namespace scene
 		This pointer should not be dropped. See IReferenceCounted::drop() for more information. */
 		virtual ISceneNode* getRootSceneNode() = 0;
 
-		//! Get the first scene node with the specified id.
-		/** \param id: The id to search for
-		\param start: Scene node to start from. All children of this scene
-		node are searched. If null is specified, the root scene node is
-		taken.
-		\return Pointer to the first scene node with this id,
-		and null if no scene node could be found.
-		This pointer should not be dropped. See IReferenceCounted::drop() for more information. */
-		virtual ISceneNode* getSceneNodeFromId(s32 id, ISceneNode* start=0) = 0;
-
-		//! Get the first scene node with the specified name.
-		/** \param name: The name to search for
-		\param start: Scene node to start from. All children of this scene
-		node are searched. If null is specified, the root scene node is
-		taken.
-		\return Pointer to the first scene node with this id,
-		and null if no scene node could be found.
-		This pointer should not be dropped. See IReferenceCounted::drop() for more information. */
-		virtual ISceneNode* getSceneNodeFromName(const c8* name, ISceneNode* start=0) = 0;
-
-		//! Get the first scene node with the specified type.
-		/** \param type: The type to search for
-		\param start: Scene node to start from. All children of this scene
-		node are searched. If null is specified, the root scene node is
-		taken.
-		\return Pointer to the first scene node with this type,
-		and null if no scene node could be found.
-		This pointer should not be dropped. See IReferenceCounted::drop() for more information. */
-		virtual ISceneNode* getSceneNodeFromType(scene::ESCENE_NODE_TYPE type, ISceneNode* start=0) = 0;
-
-		//! Get scene nodes by type.
-		/** \param type: Type of scene node to find (ESNT_ANY will return all child nodes).
-		\param outNodes: results will be added to this array (outNodes is not cleared).
-		\param start: Scene node to start from. This node and all children of this scene
-		node are checked (recursively, so also children of children, etc). If null is specified,
-		the root scene node is taken as start-node. */
-		virtual void getSceneNodesFromType(ESCENE_NODE_TYPE type,
-				core::array<scene::ISceneNode*>& outNodes,
-				ISceneNode* start=0) = 0;
-
 		//! Get the current active camera.
 		/** \return The active camera is returned. Note that this can
 		be NULL, if there was no camera created yet.
@@ -602,11 +560,6 @@ namespace scene
 		ISceneManager::drop().
 		See IReferenceCounted::drop() for more information. */
 		virtual ISceneManager* createNewSceneManager(bool cloneContent=false) = 0;
-
-		//! Get a mesh writer implementation if available
-		/** Note: You need to drop() the pointer after use again, see IReferenceCounted::drop()
-		for details. */
-		virtual IMeshWriter* createMeshWriter(EMESH_WRITER_TYPE type) = 0;
 
 		//! Get a skinned mesh, which is not available as header-only code
 		/** Note: You need to drop() the pointer after use again, see IReferenceCounted::drop()

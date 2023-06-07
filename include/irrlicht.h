@@ -44,7 +44,6 @@
 #include "EHardwareBufferFlags.h"
 #include "EMaterialFlags.h"
 #include "EMaterialTypes.h"
-#include "EMeshWriterEnums.h"
 #include "ESceneNodeTypes.h"
 #include "fast_atof.h"
 #include "IAnimatedMesh.h"
@@ -89,7 +88,6 @@
 #include "IMeshLoader.h"
 #include "IMeshManipulator.h"
 #include "IMeshSceneNode.h"
-#include "IMeshWriter.h"
 #include "IOSOperator.h"
 #include "IReadFile.h"
 #include "IReferenceCounted.h"
@@ -255,7 +253,7 @@ namespace irr
 	/** If you need more parameters to be passed to the creation of the Irrlicht Engine device,
 	use the createDeviceEx() function.
 	\param driverType: Type of the video driver to use. This can currently be video::EDT_NULL,
-	video::EDT_SOFTWARE, video::EDT_BURNINGSVIDEO, video::EDT_DIRECT3D9 and video::EDT_OPENGL.
+	video::EDT_OPENGL.
 	\param windowSize: Size of the window or the video mode in fullscreen mode.
 	\param bits: Bits per pixel in fullscreen mode. Ignored if windowed mode.
 	\param fullscreen: Should be set to true if the device should run in fullscreen. Otherwise

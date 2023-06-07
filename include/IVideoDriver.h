@@ -325,30 +325,6 @@ namespace video
 		information. */
 		virtual ITexture* addTexture(const io::path& name, IImage* image) = 0;
 
-		//! Creates a cubemap texture from loaded IImages.
-		/** \param name A name for the texture. Later calls of getTexture() with this name will return this texture.
-		The name can _not_ be empty.
-		\param imagePosX Image (positive X) the texture is created from.
-		\param imageNegX Image (negative X) the texture is created from.
-		\param imagePosY Image (positive Y) the texture is created from.
-		\param imageNegY Image (negative Y) the texture is created from.
-		\param imagePosZ Image (positive Z) the texture is created from.
-		\param imageNegZ Image (negative Z) the texture is created from.
-		\return Pointer to the newly created texture. This pointer should not be dropped. See IReferenceCounted::drop() for more information. */
-		virtual ITexture* addTextureCubemap(const io::path& name, IImage* imagePosX, IImage* imageNegX, IImage* imagePosY,
-			IImage* imageNegY, IImage* imagePosZ, IImage* imageNegZ) = 0;
-
-		//! Creates an empty cubemap texture of specified size.
-		/** \param sideLen diameter of one side of the cube
-		\param name A name for the texture. Later calls of
-		getTexture() with this name will return this texture.
-		The name can _not_ be empty.
-		\param format Desired color format of the texture. Please note
-		that the driver may choose to create the texture in another
-		color format.
-		\return Pointer to the newly created texture. 	*/
-		virtual ITexture* addTextureCubemap(const irr::u32 sideLen, const io::path& name, ECOLOR_FORMAT format = ECF_A8R8G8B8) = 0;
-
 		//! Adds a new render target texture to the texture cache.
 		/** \param size Size of the texture, in pixels. Width and
 		height should be a power of two (e.g. 64, 128, 256, 512, ...)
@@ -447,44 +423,6 @@ namespace video
 
 		//! Remove all render targets.
 		virtual void removeAllRenderTargets() = 0;
-
-		//! Sets a boolean alpha channel on the texture based on a color key.
-		/** This makes the texture fully transparent at the texels where
-		this color key can be found when using for example draw2DImage
-		with useAlphachannel==true.  The alpha of other texels is not modified.
-		\param texture Texture whose alpha channel is modified.
-		\param color Color key color. Every texel with this color will
-		become fully transparent as described above. Please note that the
-		colors of a texture may be converted when loading it, so the
-		color values may not be exactly the same in the engine and for
-		example in picture edit programs. To avoid this problem, you
-		could use the makeColorKeyTexture method, which takes the
-		position of a pixel instead a color value.
-		\param zeroTexels (deprecated) If set to true, then any texels that match
-		the color key will have their color, as well as their alpha, set to zero
-		(i.e. black). This behavior matches the legacy (buggy) behavior prior
-		to release 1.5 and is provided for backwards compatibility only.
-		This parameter may be removed by Irrlicht 1.9. */
-		virtual void makeColorKeyTexture(video::ITexture* texture,
-						video::SColor color,
-						bool zeroTexels = false) const =0;
-
-		//! Sets a boolean alpha channel on the texture based on the color at a position.
-		/** This makes the texture fully transparent at the texels where
-		the color key can be found when using for example draw2DImage
-		with useAlphachannel==true.  The alpha of other texels is not modified.
-		\param texture Texture whose alpha channel is modified.
-		\param colorKeyPixelPos Position of a pixel with the color key
-		color. Every texel with this color will become fully transparent as
-		described above.
-		\param zeroTexels (deprecated) If set to true, then any texels that match
-		the color key will have their color, as well as their alpha, set to zero
-		(i.e. black). This behavior matches the legacy (buggy) behavior prior
-		to release 1.5 and is provided for backwards compatibility only.
-		This parameter may be removed by Irrlicht 1.9. */
-		virtual void makeColorKeyTexture(video::ITexture* texture,
-				core::position2d<s32> colorKeyPixelPos,
-				bool zeroTexels = false) const =0;
 
 		//! Set a render target.
 		/** This will only work if the driver supports the
@@ -1155,23 +1093,6 @@ namespace video
 
 		//! Clear the color, depth and/or stencil buffers.
 		virtual void clearBuffers(u16 flag, SColor color = SColor(255,0,0,0), f32 depth = 1.f, u8 stencil = 0) = 0;
-
-		//! Clear the color, depth and/or stencil buffers.
-		_IRR_DEPRECATED_ void clearBuffers(bool backBuffer, bool depthBuffer, bool stencilBuffer, SColor color)
-		{
-			u16 flag = 0;
-
-			if (backBuffer)
-				flag |= ECBF_COLOR;
-
-			if (depthBuffer)
-				flag |= ECBF_DEPTH;
-
-			if (stencilBuffer)
-				flag |= ECBF_STENCIL;
-
-			clearBuffers(flag, color);
-		}
 
 		//! Clears the ZBuffer.
 		/** Note that you usually need not to call this method, as it

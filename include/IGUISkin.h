@@ -35,9 +35,6 @@ namespace gui
 		//! Like EGST_WINDOWS_CLASSIC, but with metallic shaded windows and buttons
 		EGST_WINDOWS_METALLIC,
 
-		//! Burning's skin
-		EGST_BURNING_SKIN,
-
 		//! An unknown skin, not serializable at present
 		EGST_UNKNOWN,
 
@@ -58,12 +55,6 @@ namespace gui
 		EGDC_3D_HIGH_LIGHT,
 		//! Light color for three-dimensional display elements (for edges facing the light source.)
 		EGDC_3D_LIGHT,
-		//! Active window border.
-		EGDC_ACTIVE_BORDER,
-		//! Active window title bar text.
-		EGDC_ACTIVE_CAPTION,
-		//! Background color of multiple document interface (MDI) applications.
-		EGDC_APP_WORKSPACE,
 		//! Text on a button
 		EGDC_BUTTON_TEXT,
 		//! Grayed (disabled) text.
@@ -72,10 +63,6 @@ namespace gui
 		EGDC_HIGH_LIGHT,
 		//! Text of item(s) selected in a control.
 		EGDC_HIGH_LIGHT_TEXT,
-		//! Inactive window border.
-		EGDC_INACTIVE_BORDER,
-		//! Inactive window caption.
-		EGDC_INACTIVE_CAPTION,
 		//! Tool tip text color
 		EGDC_TOOLTIP,
 		//! Tool tip background color
@@ -104,52 +91,15 @@ namespace gui
 		EGDC_COUNT
 	};
 
-	//! Names for default skin colors
-	const c8* const GUISkinColorNames[EGDC_COUNT+1] =
-	{
-		"3DDarkShadow",
-		"3DShadow",
-		"3DFace",
-		"3DHighlight",
-		"3DLight",
-		"ActiveBorder",
-		"ActiveCaption",
-		"AppWorkspace",
-		"ButtonText",
-		"GrayText",
-		"Highlight",
-		"HighlightText",
-		"InactiveBorder",
-		"InactiveCaption",
-		"ToolTip",
-		"ToolTipBackground",
-		"ScrollBar",
-		"Window",
-		"WindowSymbol",
-		"Icon",
-		"IconHighlight",
-		"GrayWindowSymbol",
-		"Editable",
-		"GrayEditable",
-		"FocusedEditable",
-		0,
-	};
-
 	//! Enumeration for default sizes.
 	enum EGUI_DEFAULT_SIZE
 	{
 		//! default with / height of scrollbar. Also width of drop-down button in comboboxes.
 		EGDS_SCROLLBAR_SIZE = 0,
-		//! height of menu
-		EGDS_MENU_HEIGHT,
 		//! width and height of a window titlebar button (like minimize/maximize/close buttons). The titlebar height is also calculated from that.
 		EGDS_WINDOW_BUTTON_WIDTH,
 		//! width of a checkbox check
 		EGDS_CHECK_BOX_WIDTH,
-		//! \deprecated This may be removed by Irrlicht 1.9
-		EGDS_MESSAGE_BOX_WIDTH,
-		//! \deprecated This may be removed by Irrlicht 1.9
-		EGDS_MESSAGE_BOX_HEIGHT,
 		//! width of a default button
 		EGDS_BUTTON_WIDTH,
 		//! height of a default button (OK and cancel buttons)
@@ -158,20 +108,6 @@ namespace gui
 		EGDS_TEXT_DISTANCE_X,
 		//! distance for text from background
 		EGDS_TEXT_DISTANCE_Y,
-		//! distance for text in the title bar, from the left of the window rect
-		EGDS_TITLEBARTEXT_DISTANCE_X,
-		//! distance for text in the title bar, from the top of the window rect
-		EGDS_TITLEBARTEXT_DISTANCE_Y,
-		//! free space in a messagebox between borders and contents on all sides
-		EGDS_MESSAGE_BOX_GAP_SPACE,
-		//! minimal space to reserve for messagebox text-width
-		EGDS_MESSAGE_BOX_MIN_TEXT_WIDTH,
-		//! maximal space to reserve for messagebox text-width
-		EGDS_MESSAGE_BOX_MAX_TEXT_WIDTH,
-		//! minimal space to reserve for messagebox text-height
-		EGDS_MESSAGE_BOX_MIN_TEXT_HEIGHT,
-		//! maximal space to reserve for messagebox text-height
-		EGDS_MESSAGE_BOX_MAX_TEXT_HEIGHT,
 		//! pixels to move an unscaled button image to the right when a button is pressed and the unpressed image looks identical
 		EGDS_BUTTON_PRESSED_IMAGE_OFFSET_X,
 		//! pixels to move an unscaled button image down when a button is pressed  and the unpressed image looks identical
@@ -190,118 +126,22 @@ namespace gui
 		EGDS_COUNT
 	};
 
-
-	//! Names for default skin sizes
-	const c8* const GUISkinSizeNames[EGDS_COUNT+1] =
-	{
-		"ScrollBarSize",
-		"MenuHeight",
-		"WindowButtonWidth",
-		"CheckBoxWidth",
-		"MessageBoxWidth",
-		"MessageBoxHeight",
-		"ButtonWidth",
-		"ButtonHeight",
-		"TextDistanceX",
-		"TextDistanceY",
-		"TitleBarTextX",
-		"TitleBarTextY",
-		"MessageBoxGapSpace",
-		"MessageBoxMinTextWidth",
-		"MessageBoxMaxTextWidth",
-		"MessageBoxMinTextHeight",
-		"MessageBoxMaxTextHeight",
-		"ButtonPressedImageOffsetX",
-		"ButtonPressedImageOffsetY",
-		"ButtonPressedTextOffsetX",
-		"ButtonPressedTextOffsetY",
-		"ButtonPressedSpriteOffsetX",
-		"ButtonPressedSpriteOffsetY",
-		0
-	};
-
-
 	//! Customizable symbols for GUI
 	enum EGUI_DEFAULT_ICON
 	{
-		//! maximize window button
-		EGDI_WINDOW_MAXIMIZE = 0,
-		//! restore window button
-		EGDI_WINDOW_RESTORE,
-		//! close window button
-		EGDI_WINDOW_CLOSE,
-		//! minimize window button
-		EGDI_WINDOW_MINIMIZE,
-		//! resize icon for bottom right corner of a window
-		EGDI_WINDOW_RESIZE,
 		//! scroll bar up button
-		EGDI_CURSOR_UP,
+		EGDI_CURSOR_UP = 0,
 		//! scroll bar down button
 		EGDI_CURSOR_DOWN,
 		//! scroll bar left button
 		EGDI_CURSOR_LEFT,
 		//! scroll bar right button
 		EGDI_CURSOR_RIGHT,
-		//! icon for menu children
-		EGDI_MENU_MORE,
 		//! tick for checkbox
 		EGDI_CHECK_BOX_CHECKED,
-		//! down arrow for dropdown menus
-		EGDI_DROP_DOWN,
-		//! smaller up arrow
-		EGDI_SMALL_CURSOR_UP,
-		//! smaller down arrow
-		EGDI_SMALL_CURSOR_DOWN,
-		//! selection dot in a radio button
-		EGDI_RADIO_BUTTON_CHECKED,
-		//! << icon indicating there is more content to the left
-		EGDI_MORE_LEFT,
-		//! >> icon indicating that there is more content to the right
-		EGDI_MORE_RIGHT,
-		//! icon indicating that there is more content above
-		EGDI_MORE_UP,
-		//! icon indicating that there is more content below
-		EGDI_MORE_DOWN,
-		//! plus icon for trees
-		EGDI_EXPAND,
-
-		//! minus icon for trees
-		EGDI_COLLAPSE,
-		//! file icon for file selection
-		EGDI_FILE,
-		//! folder icon for file selection
-		EGDI_DIRECTORY,
 
 		//! value not used, it only specifies the number of icons
 		EGDI_COUNT
-	};
-
-	const c8* const GUISkinIconNames[EGDI_COUNT+1] =
-	{
-		"windowMaximize",
-		"windowRestore",
-		"windowClose",
-		"windowMinimize",
-		"windowResize",
-		"cursorUp",
-		"cursorDown",
-		"cursorLeft",
-		"cursorRight",
-		"menuMore",
-		"checkBoxChecked",
-		"dropDown",
-		"smallCursorUp",
-		"smallCursorDown",
-		"radioButtonChecked",
-		"moreLeft",
-		"moreRight",
-		"moreUp",
-		"moreDown",
-		"expand",
-		"collapse",
-		"file",
-		"directory",
-		0
 	};
 
 	// Customizable fonts
@@ -311,25 +151,11 @@ namespace gui
 		EGDF_DEFAULT=0,
 		//! Font for buttons
 		EGDF_BUTTON,
-		//! Font for window title bars
-		EGDF_WINDOW,
-		//! Font for menu items
-		EGDF_MENU,
 		//! Font for tooltips
 		EGDF_TOOLTIP,
 		//! this value is not used, it only specifies the amount of default fonts
 		//! available.
 		EGDF_COUNT
-	};
-
-	const c8* const GUISkinFontNames[EGDF_COUNT+1] =
-	{
-		"defaultFont",
-		"buttonFont",
-		"windowFont",
-		"menuFont",
-		"tooltipFont",
-		0
 	};
 
 	//! A skin modifies the look of the GUI elements.
@@ -412,50 +238,6 @@ namespace gui
 		\param clip: Clip area. */
 		virtual void draw3DSunkenPane(IGUIElement* element,
 			video::SColor bgcolor, bool flat, bool fillBackGround,
-			const core::rect<s32>& rect,
-			const core::rect<s32>* clip=0) = 0;
-
-		//! draws a window background
-		/** Used for drawing the background of dialogs and windows.
-		\param element: Pointer to the element which wishes to draw this. This parameter
-		is usually not used by IGUISkin, but can be used for example by more complex
-		implementations to find out how to draw the part exactly.
-		\param titleBarColor: Title color.
-		\param drawTitleBar: True to enable title drawing.
-		\param rect: Defining area where to draw.
-		\param clip: Clip area.
-		\param checkClientArea: When set to non-null the function will not draw anything,
-		but will instead return the clientArea which can be used for drawing by the calling window.
-		That is the area without borders and without titlebar.
-		\return Returns rect where it would be good to draw title bar text. This will
-		work even when checkClientArea is set to a non-null value.*/
-		virtual core::rect<s32> draw3DWindowBackground(IGUIElement* element,
-			bool drawTitleBar, video::SColor titleBarColor,
-			const core::rect<s32>& rect,
-			const core::rect<s32>* clip=0,
-			core::rect<s32>* checkClientArea=0) = 0;
-
-		//! draws a standard 3d menu pane
-		/** Used for drawing for menus and context menus.
-		It uses the colors EGDC_3D_DARK_SHADOW, EGDC_3D_HIGH_LIGHT, EGDC_3D_SHADOW and
-		EGDC_3D_FACE for this. See EGUI_DEFAULT_COLOR for details.
-		\param element: Pointer to the element which wishes to draw this. This parameter
-		is usually not used by IGUISkin, but can be used for example by more complex
-		implementations to find out how to draw the part exactly.
-		\param rect: Defining area where to draw.
-		\param clip: Clip area. */
-		virtual void draw3DMenuPane(IGUIElement* element,
-			const core::rect<s32>& rect,
-			const core::rect<s32>* clip=0) = 0;
-
-		//! draws a standard 3d tool bar
-		/** Used for drawing for toolbars and menus.
-		\param element: Pointer to the element which wishes to draw this. This parameter
-		is usually not used by IGUISkin, but can be used for example by more complex
-		implementations to find out how to draw the part exactly.
-		\param rect: Defining area where to draw.
-		\param clip: Clip area. */
-		virtual void draw3DToolBar(IGUIElement* element,
 			const core::rect<s32>& rect,
 			const core::rect<s32>* clip=0) = 0;
 

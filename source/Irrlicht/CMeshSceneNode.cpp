@@ -106,21 +106,6 @@ void CMeshSceneNode::render()
 
 	bool renderMeshes = true;
 	video::SMaterial mat;
-	if (DebugDataVisible && PassCount==1)
-	{
-		// overwrite half transparency
-		if (DebugDataVisible & scene::EDS_HALF_TRANSPARENCY)
-		{
-			for (u32 g=0; g<Mesh->getMeshBufferCount(); ++g)
-			{
-				mat = Materials[g];
-				mat.MaterialType = video::EMT_TRANSPARENT_ADD_COLOR;
-				driver->setMaterial(mat);
-				driver->drawMeshBuffer(Mesh->getMeshBuffer(g));
-			}
-			renderMeshes = false;
-		}
-	}
 
 	// render original meshes
 	if (renderMeshes)
@@ -145,53 +130,6 @@ void CMeshSceneNode::render()
 		}
 	}
 
-	// for debug purposes only:
-	if (DebugDataVisible && PassCount==1)
-	{
-		video::SMaterial m;
-		m.Lighting = false;
-		m.AntiAliasing=0;
-		driver->setMaterial(m);
-
-		if (DebugDataVisible & scene::EDS_BBOX)
-		{
-			driver->draw3DBox(Box, video::SColor(255,255,255,255));
-		}
-		if (DebugDataVisible & scene::EDS_BBOX_BUFFERS)
-		{
-			for (u32 g=0; g<Mesh->getMeshBufferCount(); ++g)
-			{
-				driver->draw3DBox(
-					Mesh->getMeshBuffer(g)->getBoundingBox(),
-					video::SColor(255,190,128,128));
-			}
-		}
-
-		if (DebugDataVisible & scene::EDS_NORMALS)
-		{
-			// draw normals
-			const f32 debugNormalLength = 1.f;
-			const video::SColor debugNormalColor = video::SColor(255, 34, 221, 221);
-			const u32 count = Mesh->getMeshBufferCount();
-
-			for (u32 i=0; i != count; ++i)
-			{
-				driver->drawMeshBufferNormals(Mesh->getMeshBuffer(i), debugNormalLength, debugNormalColor);
-			}
-		}
-
-		// show mesh
-		if (DebugDataVisible & scene::EDS_MESH_WIRE_OVERLAY)
-		{
-			m.Wireframe = true;
-			driver->setMaterial(m);
-
-			for (u32 g=0; g<Mesh->getMeshBufferCount(); ++g)
-			{
-				driver->drawMeshBuffer(Mesh->getMeshBuffer(g));
-			}
-		}
-	}
 }
 
 

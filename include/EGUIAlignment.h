@@ -23,16 +23,6 @@ enum EGUI_ALIGNMENT
 	EGUIA_SCALE
 };
 
-//! Names for alignments
-const c8* const GUIAlignmentNames[] =
-{
-	"upperLeft",
-	"lowerRight",
-	"center",
-	"scale",
-	0
-};
-
 } // namespace gui
 } // namespace irr
 

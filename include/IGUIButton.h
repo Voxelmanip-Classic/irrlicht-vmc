@@ -45,19 +45,6 @@ namespace gui
 		EGBS_COUNT
 	};
 
-	//! Names for gui button state icons
-	const c8* const GUIButtonStateNames[EGBS_COUNT+1] =
-	{
-		"buttonUp",
-		"buttonDown",
-		"buttonMouseOver",
-		"buttonMouseOff",
-		"buttonFocused",
-		"buttonNotFocused",
-		"buttonDisabled",
-		0	// count
-	};
-
 	//! State of buttons used for drawing texture images.
 	//! Note that only a single state is active at a time
 	//! Also when no image is defined for a state it will use images from another state
@@ -85,21 +72,6 @@ namespace gui
 		EGBIS_IMAGE_DISABLED,
 		//! not used, counts the number of enumerated items
 		EGBIS_COUNT
-	};
-
-	//! Names for gui button image states
-	const c8* const GUIButtonImageStateNames[EGBIS_COUNT+1] =
-	{
-		"Image",	// not "ImageUp" as it otherwise breaks serialization of old files
-		"ImageUpOver",
-		"ImageUpFocused",
-		"ImageUpFocusedOver",
-		"PressedImage",	// not "ImageDown" as it otherwise breaks serialization of old files
-		"ImageDownOver",
-		"ImageDownFocused",
-		"ImageDownFocusedOver",
-		"ImageDisabled",
-		0	// count
 	};
 
 	//! GUI Button interface.

@@ -93,11 +93,6 @@ namespace video
 
 		ITexture* addTexture(const io::path& name, IImage* image) override;
 
-		virtual ITexture* addTextureCubemap(const io::path& name, IImage* imagePosX, IImage* imageNegX, IImage* imagePosY,
-			IImage* imageNegY, IImage* imagePosZ, IImage* imageNegZ) override;
-
-		ITexture* addTextureCubemap(const irr::u32 sideLen, const io::path& name, ECOLOR_FORMAT format = ECF_A8R8G8B8) override;
-
 		virtual bool setRenderTargetEx(IRenderTarget* target, u16 clearFlag, SColor clearColor = SColor(255,0,0,0),
 			f32 clearDepth = 1.f, u8 clearStencil = 0) override;
 
@@ -295,13 +290,6 @@ namespace video
 		//! Creates a render target texture for a cubemap
 		ITexture* addRenderTargetTextureCubemap(const irr::u32 sideLen,
 				const io::path& name, const ECOLOR_FORMAT format) override;
-
-		//! Creates an 1bit alpha channel of the texture based of an color key.
-		void makeColorKeyTexture(video::ITexture* texture, video::SColor color, bool zeroTexels) const override;
-
-		//! Creates an 1bit alpha channel of the texture based of an color key position.
-		virtual void makeColorKeyTexture(video::ITexture* texture, core::position2d<s32> colorKeyPixelPos,
-			bool zeroTexels) const override;
 
 		//! Returns the maximum amount of primitives (mostly vertices) which
 		//! the device is able to render with one drawIndexedTriangleList

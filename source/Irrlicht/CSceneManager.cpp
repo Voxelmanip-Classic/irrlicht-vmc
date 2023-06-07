@@ -15,7 +15,7 @@
 #include "os.h"
 
 #include "CSkinnedMesh.h"
-#include "CXMeshFileLoader.h"
+//#include "CXMeshFileLoader.h"
 #include "COBJMeshFileLoader.h"
 #include "CB3DMeshFileLoader.h"
 #include "CBillboardSceneNode.h"
@@ -72,7 +72,7 @@ CSceneManager::CSceneManager(video::IVideoDriver* driver,
 	// TODO: now that we have multiple scene managers, these should be
 	// shallow copies from the previous manager if there is one.
 
-	MeshLoaderList.push_back(new CXMeshFileLoader(this));
+	//MeshLoaderList.push_back(new CXMeshFileLoader(this));
 	MeshLoaderList.push_back(new COBJMeshFileLoader(this));
 	MeshLoaderList.push_back(new CB3DMeshFileLoader(this));
 }
@@ -690,98 +690,6 @@ void CSceneManager::clearDeletionList()
 	DeletionList.clear();
 }
 
-
-//! Returns the first scene node with the specified name.
-ISceneNode* CSceneManager::getSceneNodeFromName(const char* name, ISceneNode* start)
-{
-	if (start == 0)
-		start = getRootSceneNode();
-
-	if (!strcmp(start->getName(),name))
-		return start;
-
-	ISceneNode* node = 0;
-
-	const ISceneNodeList& list = start->getChildren();
-	ISceneNodeList::const_iterator it = list.begin();
-	for (; it!=list.end(); ++it)
-	{
-		node = getSceneNodeFromName(name, *it);
-		if (node)
-			return node;
-	}
-
-	return 0;
-}
-
-
-//! Returns the first scene node with the specified id.
-ISceneNode* CSceneManager::getSceneNodeFromId(s32 id, ISceneNode* start)
-{
-	if (start == 0)
-		start = getRootSceneNode();
-
-	if (start->getID() == id)
-		return start;
-
-	ISceneNode* node = 0;
-
-	const ISceneNodeList& list = start->getChildren();
-	ISceneNodeList::const_iterator it = list.begin();
-	for (; it!=list.end(); ++it)
-	{
-		node = getSceneNodeFromId(id, *it);
-		if (node)
-			return node;
-	}
-
-	return 0;
-}
-
-
-//! Returns the first scene node with the specified type.
-ISceneNode* CSceneManager::getSceneNodeFromType(scene::ESCENE_NODE_TYPE type, ISceneNode* start)
-{
-	if (start == 0)
-		start = getRootSceneNode();
-
-	if (start->getType() == type || ESNT_ANY == type)
-		return start;
-
-	ISceneNode* node = 0;
-
-	const ISceneNodeList& list = start->getChildren();
-	ISceneNodeList::const_iterator it = list.begin();
-	for (; it!=list.end(); ++it)
-	{
-		node = getSceneNodeFromType(type, *it);
-		if (node)
-			return node;
-	}
-
-	return 0;
-}
-
-
-//! returns scene nodes by type.
-void CSceneManager::getSceneNodesFromType(ESCENE_NODE_TYPE type, core::array<scene::ISceneNode*>& outNodes, ISceneNode* start)
-{
-	if (start == 0)
-		start = getRootSceneNode();
-
-	if (start->getType() == type || ESNT_ANY == type)
-		outNodes.push_back(start);
-
-	const ISceneNodeList& list = start->getChildren();
-	ISceneNodeList::const_iterator it = list.begin();
-
-	for (; it!=list.end(); ++it)
-	{
-		getSceneNodesFromType(type, outNodes, *it);
-	}
-}
-
-
 //! Posts an input event to the environment. Usually you do not have to
 //! use this method, it is used by the internal engine.
 bool CSceneManager::postEventFromUser(const SEvent& event)
@@ -865,13 +773,6 @@ ISkinnedMesh* CSceneManager::createSkinnedMesh()
 {
 	return new CSkinnedMesh();
 }
-
-//! Returns a mesh writer implementation if available
-IMeshWriter* CSceneManager::createMeshWriter(EMESH_WRITER_TYPE type)
-{
-	return 0;
-}
-
 
 // creates a scenemanager
 ISceneManager* createSceneManager(video::IVideoDriver* driver, gui::ICursorControl* cursorcontrol)
