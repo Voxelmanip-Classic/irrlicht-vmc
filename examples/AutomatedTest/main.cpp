@@ -87,26 +87,6 @@ int main(int argc, char *argv[])
 
 	const io::path mediaPath = getExampleMediaPath();
 
-	auto mesh_file = device->getFileSystem()->createAndOpenFile(mediaPath + "coolguy_opt.x");
-	check(mesh_file, "mesh file loading");
-	scene::IAnimatedMesh* mesh = smgr->getMesh(mesh_file);
-	check(mesh, "mesh loading");
-	if (mesh_file)
-		mesh_file->drop();
-	if (mesh)
-	{
-		video::ITexture* tex = driver->getTexture(mediaPath + "cooltexture.png");
-		check(tex, "texture loading");
-		scene::IAnimatedMeshSceneNode* node = smgr->addAnimatedMeshSceneNode(mesh);
-		if (node)
-		{
-			node->setMaterialFlag(video::EMF_LIGHTING, false);
-			node->setFrameLoop(0, 29);
-			node->setAnimationSpeed(30);
-			node->setMaterialTexture(0, tex);
-		}
-	}
-
 	smgr->addCameraSceneNode(0, core::vector3df(0,4,5), core::vector3df(0,2,0));
 
 	s32 n = 0;
