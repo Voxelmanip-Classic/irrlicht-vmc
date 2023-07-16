@@ -22,8 +22,8 @@ namespace gui
 CGUIScrollBar::CGUIScrollBar(bool horizontal, IGUIEnvironment* environment,
 				IGUIElement* parent, s32 id,
 				core::rect<s32> rectangle, bool noclip)
-	: IGUIScrollBar(environment, parent, id, rectangle), UpButton(0),
-	DownButton(0), Dragging(false), Horizontal(horizontal),
+	: IGUIScrollBar(environment, parent, id, rectangle),
+	Dragging(false), Horizontal(horizontal),
 	DraggedBySlider(false), TrayClick(false), Pos(0), DrawPos(0),
 	DrawHeight(0), Min(0), Max(100), SmallStep(10), LargeStep(50), DesiredPos(0),
 	LastChange(0)
@@ -32,8 +32,6 @@ CGUIScrollBar::CGUIScrollBar(bool horizontal, IGUIEnvironment* environment,
 	setDebugName("CGUIScrollBar");
 	#endif
 
-	refreshControls();
-
 	setNotClipped(noclip);
 
 	// this element can be tabbed to
@@ -41,17 +39,6 @@ CGUIScrollBar::CGUIScrollBar(bool horizontal, IGUIEnvironment* environment,
 	setTabOrder(-1);
 
 	setPos(0);
-}
-
-
-//! destructor
-CGUIScrollBar::~CGUIScrollBar()
-{
-	if (UpButton)
-		UpButton->drop();
-
-	if (DownButton)
-		DownButton->drop();
 }
 
 
@@ -110,12 +97,6 @@ bool CGUIScrollBar::OnEvent(const SEvent& event)
 		case EET_GUI_EVENT:
 			if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
 			{
-				if (event.GUIEvent.Caller == UpButton)
-					setPos(Pos-SmallStep);
-				else
-				if (event.GUIEvent.Caller == DownButton)
-					setPos(Pos+SmallStep);
-
 				SEvent newEvent;
 				newEvent.EventType = EET_GUI_EVENT;
 				newEvent.GUIEvent.Caller = this;
@@ -282,13 +263,6 @@ void CGUIScrollBar::draw()
 		return;
 
 
-	video::SColor iconColor = skin->getColor(isEnabled() ? EGDC_WINDOW_SYMBOL : EGDC_GRAY_WINDOW_SYMBOL);
-	if ( iconColor != CurrentIconColor )
-	{
-		refreshControls();
-	}
-
-
 	SliderRect = AbsoluteRect;
 
 	// draws the background
@@ -319,8 +293,7 @@ void CGUIScrollBar::draw()
 void CGUIScrollBar::updateAbsolutePosition()
 {
 	IGUIElement::updateAbsolutePosition();
-	// todo: properly resize
-	refreshControls();
+
 	setPos ( Pos );
 }
 
@@ -414,9 +387,6 @@ void CGUIScrollBar::setMax(s32 max)
 	if ( Min > Max )
 		Min = Max;
 
-	bool enable = core::isnotzero ( range() );
-	UpButton->setEnabled(enable);
-	DownButton->setEnabled(enable);
 	setPos(Pos);
 }
 
@@ -434,10 +404,6 @@ void CGUIScrollBar::setMin(s32 min)
 	if ( Max < Min )
 		Max = Min;
 
-
-	bool enable = core::isnotzero ( range() );
-	UpButton->setEnabled(enable);
-	DownButton->setEnabled(enable);
 	setPos(Pos);
 }
 
@@ -448,88 +414,6 @@ s32 CGUIScrollBar::getPos() const
 	return Pos;
 }
 
-
-//! refreshes the position and text on child buttons
-void CGUIScrollBar::refreshControls()
-{
-	CurrentIconColor = video::SColor(255,255,255,255);
-
-	IGUISkin* skin = Environment->getSkin();
-	IGUISpriteBank* sprites = 0;
-
-	if (skin)
-	{
-		sprites = skin->getSpriteBank();
-		CurrentIconColor = skin->getColor(isEnabled() ? EGDC_WINDOW_SYMBOL : EGDC_GRAY_WINDOW_SYMBOL);
-	}
-
-	if (Horizontal)
-	{
-		const s32 h = RelativeRect.getHeight();
-		const s32 w = (h < RelativeRect.getWidth() / 2) ? h : RelativeRect.getWidth() / 2;
-		if (!UpButton)
-		{
-			UpButton = new CGUIButton(Environment, this, -1, core::rect<s32>(0,0, w, h), NoClip);
-			UpButton->setSubElement(true);
-			UpButton->setTabStop(false);
-		}
-		if (sprites)
-		{
-			UpButton->setSpriteBank(sprites);
-			UpButton->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_CURSOR_LEFT), CurrentIconColor);
-			UpButton->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_CURSOR_LEFT), CurrentIconColor);
-		}
-		UpButton->setRelativePosition(core::rect<s32>(0,0, w, h));
-		UpButton->setAlignment(EGUIA_UPPERLEFT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT);
-		if (!DownButton)
-		{
-			DownButton = new CGUIButton(Environment, this, -1, core::rect<s32>(RelativeRect.getWidth()-w, 0, RelativeRect.getWidth(), h), NoClip);
-			DownButton->setSubElement(true);
-			DownButton->setTabStop(false);
-		}
-		if (sprites)
-		{
-			DownButton->setSpriteBank(sprites);
-			DownButton->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_CURSOR_RIGHT), CurrentIconColor);
-			DownButton->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_CURSOR_RIGHT), CurrentIconColor);
-		}
-		DownButton->setRelativePosition(core::rect<s32>(RelativeRect.getWidth()-w, 0, RelativeRect.getWidth(), h));
-		DownButton->setAlignment(EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT);
-	}
-	else
-	{
-		const s32 w = RelativeRect.getWidth();
-		const s32 h = (w < RelativeRect.getHeight() / 2) ? w : RelativeRect.getHeight() / 2;
-		if (!UpButton)
-		{
-			UpButton = new CGUIButton(Environment, this, -1, core::rect<s32>(0,0, w, h), NoClip);
-			UpButton->setSubElement(true);
-			UpButton->setTabStop(false);
-		}
-		if (sprites)
-		{
-			UpButton->setSpriteBank(sprites);
-			UpButton->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_CURSOR_UP), CurrentIconColor);
-			UpButton->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_CURSOR_UP), CurrentIconColor);
-		}
-		UpButton->setRelativePosition(core::rect<s32>(0,0, w, h));
-		UpButton->setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
-		if (!DownButton)
-		{
-			DownButton = new CGUIButton(Environment, this, -1, core::rect<s32>(0,RelativeRect.getHeight()-h, w, RelativeRect.getHeight()), NoClip);
-			DownButton->setSubElement(true);
-			DownButton->setTabStop(false);
-		}
-		if (sprites)
-		{
-			DownButton->setSpriteBank(sprites);
-			DownButton->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_CURSOR_DOWN), CurrentIconColor);
-			DownButton->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_CURSOR_DOWN), CurrentIconColor);
-		}
-		DownButton->setRelativePosition(core::rect<s32>(0,RelativeRect.getHeight()-h, w, RelativeRect.getHeight()));
-		DownButton->setAlignment(EGUIA_UPPERLEFT, EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT);
-	}
-}
 
 } // end namespace gui
 } // end namespace irr

@@ -22,9 +22,6 @@ namespace gui
 			IGUIElement* parent, s32 id, core::rect<s32> rectangle,
 			bool noclip=false);
 
-		//! destructor
-		virtual ~CGUIScrollBar();
-
 		//! called if an event happened.
 		bool OnEvent(const SEvent& event) override;
 
@@ -69,11 +66,7 @@ namespace gui
 
 	private:
 
-		void refreshControls();
 		s32 getPosFromMousePos(const core::position2di &p) const;
-
-		IGUIButton* UpButton;
-		IGUIButton* DownButton;
 
 		core::rect<s32> SliderRect;
 
@@ -90,7 +83,6 @@ namespace gui
 		s32 LargeStep;
 		s32 DesiredPos;
 		u32 LastChange;
-		video::SColor CurrentIconColor;
 
 		f32 range () const { return (f32) ( Max - Min ); }
 	};

@@ -372,8 +372,8 @@ void CGUIComboBox::updateListButtonWidth(s32 width)
 	if (ListButton->getRelativePosition().getWidth() != width)
 	{
 		core::rect<s32> r;
-		r.UpperLeftCorner.X = RelativeRect.getWidth() - width - 2;
-		r.LowerRightCorner.X = RelativeRect.getWidth() - 2;
+		r.UpperLeftCorner.X = RelativeRect.getWidth() - width;
+		r.LowerRightCorner.X = RelativeRect.getWidth();
 		r.UpperLeftCorner.Y = 2;
 		r.LowerRightCorner.Y = RelativeRect.getHeight() - 2;
 		ListButton->setRelativePosition(r);
