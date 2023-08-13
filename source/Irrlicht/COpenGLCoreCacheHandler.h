@@ -2,9 +2,7 @@
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
-#ifndef __C_OGLCORE_CACHE_HANDLER_H_INCLUDED__
-#define __C_OGLCORE_CACHE_HANDLER_H_INCLUDED__
-
+#pragma once
 
 #include "SMaterial.h"
 #include "ITexture.h"
@@ -590,9 +588,9 @@ public:
 		// Fix textures which got removed
 		for ( u32 i=0; i < MATERIAL_MAX_TEXTURES; ++i )
 		{
-			if ( material.TextureLayer[i].Texture && !TextureCache[i] )
+			if ( material.TextureLayers[i].Texture && !TextureCache[i] )
 			{
-				material.TextureLayer[i].Texture = 0;
+				material.TextureLayers[i].Texture = 0;
 			}
 		}
 	}
@@ -639,5 +637,3 @@ protected:
 
 }
 }
-
-#endif

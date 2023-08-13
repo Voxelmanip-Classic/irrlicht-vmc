@@ -85,19 +85,21 @@ CNullDriver::CNullDriver(io::IFileSystem* io, const core::dimension2d<u32>& scre
 	for (u32 i=0; i<video::EVDF_COUNT; ++i)
 		FeatureEnabled[i]=true;
 
-	InitMaterial2D.AntiAliasing=video::EAAM_OFF;
-	InitMaterial2D.Lighting=false;
-	InitMaterial2D.ZWriteEnable=video::EZW_OFF;
-	InitMaterial2D.ZBuffer=video::ECFN_DISABLED;
-	InitMaterial2D.UseMipMaps=false;
-	for (u32 i=0; i<video::MATERIAL_MAX_TEXTURES; ++i)
-	{
-		InitMaterial2D.TextureLayer[i].BilinearFilter=false;
-		InitMaterial2D.TextureLayer[i].TextureWrapU=video::ETC_REPEAT;
-		InitMaterial2D.TextureLayer[i].TextureWrapV=video::ETC_REPEAT;
-		InitMaterial2D.TextureLayer[i].TextureWrapW = video::ETC_REPEAT;
-	}
-	OverrideMaterial2D=InitMaterial2D;
+	InitMaterial2D.AntiAliasing = video::EAAM_OFF;
+	InitMaterial2D.Lighting = false;
+	InitMaterial2D.ZWriteEnable = video::EZW_OFF;
+	InitMaterial2D.ZBuffer = video::ECFN_DISABLED;
+	InitMaterial2D.UseMipMaps = false;
+	InitMaterial2D.forEachTexture([] (auto &tex) {
+		// Using ETMINF_LINEAR_MIPMAP_NEAREST (bilinear) for 2D graphics looks
+		// much better and doesn't have any downsides (e.g. regarding pixel art).
+		tex.MinFilter = video::ETMINF_LINEAR_MIPMAP_NEAREST;
+		tex.MagFilter = video::ETMAGF_NEAREST;
+		tex.TextureWrapU = video::ETC_REPEAT;
+		tex.TextureWrapV = video::ETC_REPEAT;
+		tex.TextureWrapW = video::ETC_REPEAT;
+	});
+	OverrideMaterial2D = InitMaterial2D;
 }
 
 

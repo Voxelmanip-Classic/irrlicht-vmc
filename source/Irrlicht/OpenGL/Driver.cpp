@@ -335,11 +335,6 @@ COpenGL3DriverBase::~COpenGL3DriverBase()
 		fsFile->drop();
 	}
 
-	void COpenGL3DriverBase::addDummyMaterial(E_MATERIAL_TYPE type) {
-		auto index = addMaterialRenderer(getMaterialRenderer(EMT_SOLID), "DUMMY");
-		assert(index == type);
-	}
-
 	void COpenGL3DriverBase::createMaterialRenderers()
 	{
 		// Create callbacks.
@@ -352,7 +347,6 @@ COpenGL3DriverBase::~COpenGL3DriverBase()
 
 		// Create built-in materials.
 		// The addition order must be the same as in the E_MATERIAL_TYPE enumeration. Thus the
-		// addDummyMaterial calls for materials no longer supported.
 
 		const core::stringc VertexShader = OGLES2ShaderPath + "Solid.vsh";
 
@@ -360,19 +354,6 @@ COpenGL3DriverBase::~COpenGL3DriverBase()
 		core::stringc FragmentShader = OGLES2ShaderPath + "Solid.fsh";
 		addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
 			EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, SolidCB, EMT_SOLID, 0);
-
-		addDummyMaterial(EMT_SOLID_2_LAYER);
-		addDummyMaterial(EMT_LIGHTMAP);
-		addDummyMaterial(EMT_LIGHTMAP_ADD);
-		addDummyMaterial(EMT_LIGHTMAP_M2);
-		addDummyMaterial(EMT_LIGHTMAP_M4);
-		addDummyMaterial(EMT_LIGHTMAP_LIGHTING);
-		addDummyMaterial(EMT_LIGHTMAP_LIGHTING_M2);
-		addDummyMaterial(EMT_LIGHTMAP_LIGHTING_M4);
-		addDummyMaterial(EMT_DETAIL_MAP);
-		addDummyMaterial(EMT_SPHERE_MAP);
-		addDummyMaterial(EMT_REFLECTION_2_LAYER);
-		addDummyMaterial(EMT_TRANSPARENT_ADD_COLOR);
 
 		// EMT_TRANSPARENT_ALPHA_CHANNEL
 		FragmentShader = OGLES2ShaderPath + "TransparentAlphaChannel.fsh";
@@ -388,8 +369,6 @@ COpenGL3DriverBase::~COpenGL3DriverBase()
 		FragmentShader = OGLES2ShaderPath + "TransparentVertexAlpha.fsh";
 		addHighLevelShaderMaterialFromFiles(VertexShader, "main", EVST_VS_2_0, FragmentShader, "main", EPST_PS_2_0, "", "main",
 			EGST_GS_4_0, scene::EPT_TRIANGLES, scene::EPT_TRIANGLE_STRIP, 0, TransparentVertexAlphaCB, EMT_TRANSPARENT_ALPHA_CHANNEL, 0);
-
-		addDummyMaterial(EMT_TRANSPARENT_REFLECTION_2_LAYER);
 
 		// EMT_ONETEXTURE_BLEND
 		FragmentShader = OGLES2ShaderPath + "OneTextureBlend.fsh";
@@ -423,7 +402,7 @@ COpenGL3DriverBase::~COpenGL3DriverBase()
 
 	bool COpenGL3DriverBase::setMaterialTexture(irr::u32 layerIdx, const irr::video::ITexture* texture)
 	{
-		Material.TextureLayer[layerIdx].Texture = const_cast<ITexture*>(texture); // function uses const-pointer for texture because all draw functions use const-pointers already
+		Material.TextureLayers[layerIdx].Texture = const_cast<ITexture*>(texture); // function uses const-pointer for texture because all draw functions use const-pointers already
 		return CacheHandler->getTextureCache().set(0, texture);
 	}
 
@@ -1477,64 +1456,66 @@ COpenGL3DriverBase::~COpenGL3DriverBase()
 			if (resetAllRenderstates)
 				tmpTexture->getStatesCache().IsCached = false;
 
-			if (!tmpTexture->getStatesCache().IsCached || material.TextureLayer[i].BilinearFilter != tmpTexture->getStatesCache().BilinearFilter ||
-				material.TextureLayer[i].TrilinearFilter != tmpTexture->getStatesCache().TrilinearFilter)
+			if (!tmpTexture->getStatesCache().IsCached || material.TextureLayers[i].MagFilter != tmpTexture->getStatesCache().MagFilter)
 			{
+				E_TEXTURE_MAG_FILTER magFilter = material.TextureLayers[i].MagFilter;
 				glTexParameteri(tmpTextureType, GL_TEXTURE_MAG_FILTER,
-					(material.TextureLayer[i].BilinearFilter || material.TextureLayer[i].TrilinearFilter) ? GL_LINEAR : GL_NEAREST);
+					magFilter == ETMAGF_NEAREST ? GL_NEAREST :
+					(assert(magFilter == ETMAGF_LINEAR), GL_LINEAR));
 
-				tmpTexture->getStatesCache().BilinearFilter = material.TextureLayer[i].BilinearFilter;
-				tmpTexture->getStatesCache().TrilinearFilter = material.TextureLayer[i].TrilinearFilter;
+				tmpTexture->getStatesCache().MagFilter = magFilter;
 			}
 
 			if (material.UseMipMaps && tmpTexture->hasMipMaps())
 			{
-				if (!tmpTexture->getStatesCache().IsCached || material.TextureLayer[i].BilinearFilter != tmpTexture->getStatesCache().BilinearFilter ||
-					material.TextureLayer[i].TrilinearFilter != tmpTexture->getStatesCache().TrilinearFilter || !tmpTexture->getStatesCache().MipMapStatus)
+				if (!tmpTexture->getStatesCache().IsCached || material.TextureLayers[i].MinFilter != tmpTexture->getStatesCache().MinFilter ||
+					!tmpTexture->getStatesCache().MipMapStatus)
 				{
+					E_TEXTURE_MIN_FILTER minFilter = material.TextureLayers[i].MinFilter;
 					glTexParameteri(tmpTextureType, GL_TEXTURE_MIN_FILTER,
-						material.TextureLayer[i].TrilinearFilter ? GL_LINEAR_MIPMAP_LINEAR :
-						material.TextureLayer[i].BilinearFilter ? GL_LINEAR_MIPMAP_NEAREST :
-						GL_NEAREST_MIPMAP_NEAREST);
+						minFilter == ETMINF_NEAREST_MIPMAP_NEAREST ? GL_NEAREST_MIPMAP_NEAREST :
+						minFilter == ETMINF_LINEAR_MIPMAP_NEAREST ? GL_LINEAR_MIPMAP_NEAREST :
+						minFilter == ETMINF_NEAREST_MIPMAP_LINEAR ? GL_NEAREST_MIPMAP_LINEAR :
+						(assert(minFilter == ETMINF_LINEAR_MIPMAP_LINEAR), GL_LINEAR_MIPMAP_LINEAR));
 
-					tmpTexture->getStatesCache().BilinearFilter = material.TextureLayer[i].BilinearFilter;
-					tmpTexture->getStatesCache().TrilinearFilter = material.TextureLayer[i].TrilinearFilter;
+					tmpTexture->getStatesCache().MinFilter = minFilter;
 					tmpTexture->getStatesCache().MipMapStatus = true;
 				}
 			}
 			else
 			{
-				if (!tmpTexture->getStatesCache().IsCached || material.TextureLayer[i].BilinearFilter != tmpTexture->getStatesCache().BilinearFilter ||
-					material.TextureLayer[i].TrilinearFilter != tmpTexture->getStatesCache().TrilinearFilter || tmpTexture->getStatesCache().MipMapStatus)
+				if (!tmpTexture->getStatesCache().IsCached || material.TextureLayers[i].MinFilter != tmpTexture->getStatesCache().MinFilter ||
+					tmpTexture->getStatesCache().MipMapStatus)
 				{
+					E_TEXTURE_MIN_FILTER minFilter = material.TextureLayers[i].MinFilter;
 					glTexParameteri(tmpTextureType, GL_TEXTURE_MIN_FILTER,
-						(material.TextureLayer[i].BilinearFilter || material.TextureLayer[i].TrilinearFilter) ? GL_LINEAR : GL_NEAREST);
+						(minFilter == ETMINF_NEAREST_MIPMAP_NEAREST || minFilter == ETMINF_NEAREST_MIPMAP_LINEAR) ? GL_NEAREST :
+						(assert(minFilter == ETMINF_LINEAR_MIPMAP_NEAREST || minFilter == ETMINF_LINEAR_MIPMAP_LINEAR), GL_LINEAR));
 
-					tmpTexture->getStatesCache().BilinearFilter = material.TextureLayer[i].BilinearFilter;
-					tmpTexture->getStatesCache().TrilinearFilter = material.TextureLayer[i].TrilinearFilter;
+					tmpTexture->getStatesCache().MinFilter = minFilter;
 					tmpTexture->getStatesCache().MipMapStatus = false;
 				}
 			}
 
 			if (AnisotropicFilterSupported &&
-				(!tmpTexture->getStatesCache().IsCached || material.TextureLayer[i].AnisotropicFilter != tmpTexture->getStatesCache().AnisotropicFilter))
+				(!tmpTexture->getStatesCache().IsCached || material.TextureLayers[i].AnisotropicFilter != tmpTexture->getStatesCache().AnisotropicFilter))
 			{
 				glTexParameteri(tmpTextureType, GL.TEXTURE_MAX_ANISOTROPY,
-					material.TextureLayer[i].AnisotropicFilter>1 ? core::min_(MaxAnisotropy, material.TextureLayer[i].AnisotropicFilter) : 1);
+					material.TextureLayers[i].AnisotropicFilter>1 ? core::min_(MaxAnisotropy, material.TextureLayers[i].AnisotropicFilter) : 1);
 
-				tmpTexture->getStatesCache().AnisotropicFilter = material.TextureLayer[i].AnisotropicFilter;
+				tmpTexture->getStatesCache().AnisotropicFilter = material.TextureLayers[i].AnisotropicFilter;
 			}
 
-			if (!tmpTexture->getStatesCache().IsCached || material.TextureLayer[i].TextureWrapU != tmpTexture->getStatesCache().WrapU)
+			if (!tmpTexture->getStatesCache().IsCached || material.TextureLayers[i].TextureWrapU != tmpTexture->getStatesCache().WrapU)
 			{
-				glTexParameteri(tmpTextureType, GL_TEXTURE_WRAP_S, getTextureWrapMode(material.TextureLayer[i].TextureWrapU));
-				tmpTexture->getStatesCache().WrapU = material.TextureLayer[i].TextureWrapU;
+				glTexParameteri(tmpTextureType, GL_TEXTURE_WRAP_S, getTextureWrapMode(material.TextureLayers[i].TextureWrapU));
+				tmpTexture->getStatesCache().WrapU = material.TextureLayers[i].TextureWrapU;
 			}
 
-			if (!tmpTexture->getStatesCache().IsCached || material.TextureLayer[i].TextureWrapV != tmpTexture->getStatesCache().WrapV)
+			if (!tmpTexture->getStatesCache().IsCached || material.TextureLayers[i].TextureWrapV != tmpTexture->getStatesCache().WrapV)
 			{
-				glTexParameteri(tmpTextureType, GL_TEXTURE_WRAP_T, getTextureWrapMode(material.TextureLayer[i].TextureWrapV));
-				tmpTexture->getStatesCache().WrapV = material.TextureLayer[i].TextureWrapV;
+				glTexParameteri(tmpTextureType, GL_TEXTURE_WRAP_T, getTextureWrapMode(material.TextureLayers[i].TextureWrapV));
+				tmpTexture->getStatesCache().WrapV = material.TextureLayers[i].TextureWrapV;
 			}
 
 			tmpTexture->getStatesCache().IsCached = true;

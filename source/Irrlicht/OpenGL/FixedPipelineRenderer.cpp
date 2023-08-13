@@ -94,7 +94,7 @@ void COpenGL3MaterialBaseCB::OnSetConstants(IMaterialRendererServices* services,
 	services->setPixelShaderConstant(ThicknessID, &Thickness, 1);
 }
 
-// EMT_SOLID + EMT_TRANSPARENT_ADD_COLOR + EMT_TRANSPARENT_ALPHA_CHANNEL + EMT_TRANSPARENT_VERTEX_ALPHA
+// EMT_SOLID + EMT_TRANSPARENT_ALPHA_CHANNEL + EMT_TRANSPARENT_VERTEX_ALPHA
 
 COpenGL3MaterialSolidCB::COpenGL3MaterialSolidCB() :
 	FirstUpdate(true), TMatrix0ID(-1), AlphaRefID(-1), TextureUsage0ID(-1), TextureUnit0ID(-1), AlphaRef(0.5f), TextureUsage0(0), TextureUnit0(0)
@@ -106,7 +106,7 @@ void COpenGL3MaterialSolidCB::OnSetMaterial(const SMaterial& material)
 	COpenGL3MaterialBaseCB::OnSetMaterial(material);
 
 	AlphaRef = material.MaterialTypeParam;
-	TextureUsage0 = (material.TextureLayer[0].Texture) ? 1 : 0;
+	TextureUsage0 = (material.TextureLayers[0].Texture) ? 1 : 0;
 }
 
 void COpenGL3MaterialSolidCB::OnSetConstants(IMaterialRendererServices* services, s32 userData)
@@ -163,7 +163,7 @@ void COpenGL3MaterialOneTextureBlendCB::OnSetMaterial(const SMaterial& material)
 		}
 	}
 
-	TextureUsage0 = (material.TextureLayer[0].Texture) ? 1 : 0;
+	TextureUsage0 = (material.TextureLayers[0].Texture) ? 1 : 0;
 }
 
 void COpenGL3MaterialOneTextureBlendCB::OnSetConstants(IMaterialRendererServices* services, s32 userData)

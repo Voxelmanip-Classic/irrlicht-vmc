@@ -2,9 +2,7 @@
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
-#ifndef __C_OGLCORE_TEXTURE_H_INCLUDED__
-#define __C_OGLCORE_TEXTURE_H_INCLUDED__
-
+#pragma once
 
 #include "irrArray.h"
 #include "SMaterialLayer.h"
@@ -31,8 +29,8 @@ public:
 	struct SStatesCache
 	{
 		SStatesCache() : WrapU(ETC_REPEAT), WrapV(ETC_REPEAT), WrapW(ETC_REPEAT),
-			LODBias(0), AnisotropicFilter(0), BilinearFilter(false), TrilinearFilter(false),
-			MipMapStatus(false), IsCached(false)
+			LODBias(0), AnisotropicFilter(0), MinFilter(video::ETMINF_NEAREST_MIPMAP_NEAREST),
+			MagFilter(video::ETMAGF_NEAREST), MipMapStatus(false), IsCached(false)
 		{
 		}
 
@@ -41,8 +39,8 @@ public:
 		u8 WrapW;
 		s8 LODBias;
 		u8 AnisotropicFilter;
-		bool BilinearFilter;
-		bool TrilinearFilter;
+		video::E_TEXTURE_MIN_FILTER MinFilter;
+		video::E_TEXTURE_MAG_FILTER MagFilter;
 		bool MipMapStatus;
 		bool IsCached;
 	};
@@ -662,5 +660,3 @@ protected:
 
 }
 }
-
-#endif

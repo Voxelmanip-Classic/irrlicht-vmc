@@ -15,7 +15,7 @@ static io::path getExampleMediaPath()
 #ifdef IRR_MOBILE_PATHS
 	return io::path("media/");
 #else
-	return io::path("../media/");
+	return io::path("../../media/");
 #endif
 }
 

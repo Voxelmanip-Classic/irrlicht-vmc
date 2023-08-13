@@ -20,7 +20,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_definitions(-D_DEBUG)
 endif()
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
@@ -66,11 +66,21 @@ if(NOT REVISION_SANITY_CHECK)
 	message(FATAL_ERROR "IrrlichtMt revision number mismatches between CMake and headers.")
 endif()
 
+# Platform-independent configuration (hard-coded currently)
+add_definitions(
+	-DIRR_ENABLE_BUILTIN_FONT
+	-D_IRR_COMPILE_WITH_SKINNED_MESH_SUPPORT_
+)
+
 # Platform-specific configuration
 
 if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
 	set(SOLARIS TRUE)
 endif()
+
+# EGL
+
+set(ENABLE_EGL OFF)
 
 # Device
 
@@ -82,10 +92,15 @@ elseif(APPLE)
 	set(DEVICE "OSX")
 elseif(ANDROID)
 	add_definitions(-D_IRR_ANDROID_PLATFORM_ -D_IRR_COMPILE_ANDROID_ASSET_READER_)
-
+	if(USE_SDL2)
+		message(FATAL_ERROR "SDL2 device is not (yet) supported on Android")
+	endif()
 	set(DEVICE "ANDROID")
+	# EGL is required for Android
+	set(ENABLE_EGL ON)
 elseif(EMSCRIPTEN)
-	add_definitions(-D_IRR_EMSCRIPTEN_PLATFORM_ -D_IRR_COMPILE_WITH_EGL_MANAGER_)
+	add_definitions(-D_IRR_EMSCRIPTEN_PLATFORM_)
+	set(ENABLE_EGL ON)
 	set(LINUX_PLATFORM TRUE)
 	set(DEVICE "SDL")
 elseif(SOLARIS)
@@ -145,7 +160,7 @@ if(EMSCRIPTEN OR APPLE)
 	set(ENABLE_GLES1 FALSE)
 else()
 	if(ANDROID)
-		set(DEFAULT_GLES1 FALSE)
+		set(DEFAULT_GLES1 TRUE)
 	endif()
 	option(ENABLE_GLES1 "Enable OpenGL ES" ${DEFAULT_GLES1})
 endif()
@@ -170,7 +185,7 @@ endif()
 if(ENABLE_OPENGL)
 	add_definitions(-D_IRR_COMPILE_WITH_OPENGL_)
 	if(DEVICE STREQUAL "WINDOWS")
-		add_definitions(-D_IRR_COMPILE_WITH_WGL_MANAGER_ -D_IRR_OPENGL_USE_EXTPOINTER_)
+		add_definitions(-D_IRR_OPENGL_USE_EXTPOINTER_)
 	elseif(DEVICE STREQUAL "X11")
 		add_definitions(-D_IRR_COMPILE_WITH_GLX_MANAGER_ -D_IRR_OPENGL_USE_EXTPOINTER_)
 	elseif(DEVICE STREQUAL "OSX")
@@ -194,18 +209,22 @@ if(ENABLE_GLES1)
 	endif()
 	add_definitions(-D_IRR_COMPILE_WITH_OGLES1_)
 	if(DEVICE MATCHES "^(WINDOWS|X11|ANDROID)$")
-		add_definitions(-D_IRR_COMPILE_WITH_EGL_MANAGER_ -D_IRR_OGLES1_USE_EXTPOINTER_)
+		add_definitions(-D_IRR_OGLES1_USE_EXTPOINTER_)
 	endif()
+	# We need EGL for GLES1
+	set(ENABLE_EGL ON)
 endif()
 
 if(ENABLE_GLES2)
 	add_definitions(-D_IRR_COMPILE_WITH_OGLES2_)
 	if(DEVICE MATCHES "^(WINDOWS|X11|ANDROID)$" OR EMSCRIPTEN)
-		add_definitions(-D_IRR_COMPILE_WITH_EGL_MANAGER_ -D_IRR_OGLES2_USE_EXTPOINTER_)
+		add_definitions(-D_IRR_OGLES2_USE_EXTPOINTER_)
 	elseif(DEVICE STREQUAL "SDL")
 		set(USE_SDLGL ON)
 		set(USE_SDLGLES2 ON)
 	endif()
+	# We need EGL for GLES2
+	set(ENABLE_EGL ON)
 endif()
 
 if(ENABLE_WEBGL1)
@@ -233,6 +252,7 @@ elseif (ENABLE_GLES2)
 else()
 	message(STATUS "OpenGL ES 2: OFF")
 endif()
+message(STATUS "EGL: ${ENABLE_EGL}")
 message(STATUS "WebGL: ${ENABLE_WEBGL1}")
 
 # Required libs
@@ -341,11 +361,20 @@ add_library(IRROBJ OBJECT
 set(IRRDRVROBJ
 	CNullDriver.cpp
 	CGLXManager.cpp
-	CWGLManager.cpp
-	CEGLManager.cpp
 	CSDLManager.cpp
 	mt_opengl_loader.cpp
 )
+
+if(WIN32)
+	set(IRRDRVROBJ ${IRRDRVROBJ}
+		CIrrDeviceWin32.cpp
+	)
+	if(ENABLE_OPENGL)
+		set(IRRDRVROBJ ${IRRDRVROBJ}
+			CWGLManager.cpp
+		)
+	endif()
+endif()
 
 if(ENABLE_OPENGL)
 	set(IRRDRVROBJ
@@ -363,6 +392,14 @@ if(ENABLE_GLES1)
 		${IRRDRVROBJ}
 		COGLESDriver.cpp
 		COGLESExtensionHandler.cpp
+	)
+endif()
+
+
+if(ENABLE_EGL)
+	set(IRRDRVROBJ
+		${IRRDRVROBJ}
+		CEGLManager.cpp
 	)
 endif()
 
@@ -425,7 +462,6 @@ add_library(IRROTHEROBJ OBJECT
 	CIrrDeviceSDL.cpp
 	CIrrDeviceLinux.cpp
 	CIrrDeviceStub.cpp
-	CIrrDeviceWin32.cpp
 	CLogger.cpp
 	COSOperator.cpp
 	Irrlicht.cpp

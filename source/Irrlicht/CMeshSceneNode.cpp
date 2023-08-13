@@ -102,34 +102,24 @@ void CMeshSceneNode::render()
 	driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 	Box = Mesh->getBoundingBox();
 
-	// for debug purposes only:
-
-	bool renderMeshes = true;
-	video::SMaterial mat;
-
-	// render original meshes
-	if (renderMeshes)
+	for (u32 i=0; i<Mesh->getMeshBufferCount(); ++i)
 	{
-		for (u32 i=0; i<Mesh->getMeshBufferCount(); ++i)
+		scene::IMeshBuffer* mb = Mesh->getMeshBuffer(i);
+		if (mb)
 		{
-			scene::IMeshBuffer* mb = Mesh->getMeshBuffer(i);
-			if (mb)
+			const video::SMaterial& material = ReadOnlyMaterials ? mb->getMaterial() : Materials[i];
+
+			const bool transparent = driver->needsTransparentRenderPass(material);
+
+			// only render transparent buffer if this is the transparent render pass
+			// and solid only in solid pass
+			if (transparent == isTransparentPass)
 			{
-				const video::SMaterial& material = ReadOnlyMaterials ? mb->getMaterial() : Materials[i];
-
-				const bool transparent = driver->needsTransparentRenderPass(material);
-
-				// only render transparent buffer if this is the transparent render pass
-				// and solid only in solid pass
-				if (transparent == isTransparentPass)
-				{
-					driver->setMaterial(material);
-					driver->drawMeshBuffer(mb);
-				}
+				driver->setMaterial(material);
+				driver->drawMeshBuffer(mb);
 			}
 		}
 	}
-
 }
 
 

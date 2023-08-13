@@ -2,9 +2,7 @@
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in Irrlicht.h
 
-#ifndef __C_OPEN_GL_FEATURE_MAP_H_INCLUDED__
-#define __C_OPEN_GL_FEATURE_MAP_H_INCLUDED__
-
+#pragma once
 
 #ifdef _IRR_COMPILE_WITH_OPENGL_
 
@@ -3393,7 +3391,7 @@ inline void COpenGLExtensionHandler::extGlGenerateTextureMipmap(GLuint texture, 
 inline void COpenGLExtensionHandler::extGlSwapInterval(int interval)
 {
 	// we have wglext, so try to use that
-#if defined(_IRR_WINDOWS_API_) && defined(_IRR_COMPILE_WITH_WINDOWS_DEVICE_)
+#if defined(_IRR_WINDOWS_API_)
 #ifdef WGL_EXT_swap_control
 	if (pWglSwapIntervalEXT)
 		pWglSwapIntervalEXT(interval);
@@ -3435,6 +3433,3 @@ inline void COpenGLExtensionHandler::extGlSwapInterval(int interval)
 }
 
 #endif
-
-#endif
-

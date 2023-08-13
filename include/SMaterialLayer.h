@@ -43,6 +43,32 @@ namespace video
 			"texture_clamp_mirror_clamp_to_edge",
 			"texture_clamp_mirror_clamp_to_border", 0};
 
+
+	//! Texture minification filter.
+	/** Used when scaling textures down. See the documentation on OpenGL's
+	`GL_TEXTURE_MIN_FILTER` for more information. */
+	enum E_TEXTURE_MIN_FILTER {
+		//! Aka nearest-neighbor.
+		ETMINF_NEAREST_MIPMAP_NEAREST = 0,
+		//! Aka bilinear.
+		ETMINF_LINEAR_MIPMAP_NEAREST,
+		//! Isn't known by any other name.
+		ETMINF_NEAREST_MIPMAP_LINEAR,
+		//! Aka trilinear.
+		ETMINF_LINEAR_MIPMAP_LINEAR,
+	};
+
+	//! Texture magnification filter.
+	/** Used when scaling textures up. See the documentation on OpenGL's
+	`GL_TEXTURE_MAG_FILTER` for more information.
+	Note that mipmaps are only used for minification, not for magnification. */
+	enum E_TEXTURE_MAG_FILTER {
+		//! Aka nearest-neighbor.
+		ETMAGF_NEAREST = 0,
+		//! Aka bilinear.
+		ETMAGF_LINEAR,
+	};
+
 	//! Struct for holding material parameters which exist per texture layer
 	// Note for implementors: Serialization is in CNullDriver
 	class SMaterialLayer
@@ -50,7 +76,7 @@ namespace video
 	public:
 		//! Default constructor
 		SMaterialLayer() : Texture(0), TextureWrapU(ETC_REPEAT), TextureWrapV(ETC_REPEAT), TextureWrapW(ETC_REPEAT),
-			BilinearFilter(true), TrilinearFilter(false), AnisotropicFilter(0), LODBias(0), TextureMatrix(0)
+			MinFilter(ETMINF_LINEAR_MIPMAP_NEAREST), MagFilter(ETMAGF_LINEAR), AnisotropicFilter(0), LODBias(0), TextureMatrix(0)
 		{
 		}
 
@@ -104,8 +130,8 @@ namespace video
 			TextureWrapU = other.TextureWrapU;
 			TextureWrapV = other.TextureWrapV;
 			TextureWrapW = other.TextureWrapW;
-			BilinearFilter = other.BilinearFilter;
-			TrilinearFilter = other.TrilinearFilter;
+			MinFilter = other.MinFilter;
+			MagFilter = other.MagFilter;
 			AnisotropicFilter = other.AnisotropicFilter;
 			LODBias = other.LODBias;
 
@@ -157,8 +183,8 @@ namespace video
 				TextureWrapU != b.TextureWrapU ||
 				TextureWrapV != b.TextureWrapV ||
 				TextureWrapW != b.TextureWrapW ||
-				BilinearFilter != b.BilinearFilter ||
-				TrilinearFilter != b.TrilinearFilter ||
+				MinFilter != b.MinFilter ||
+				MagFilter != b.MagFilter ||
 				AnisotropicFilter != b.AnisotropicFilter ||
 				LODBias != b.LODBias;
 			if (different)
@@ -184,13 +210,11 @@ namespace video
 		u8 TextureWrapV:4;
 		u8 TextureWrapW:4;
 
-		//! Is bilinear filtering enabled? Default: true
-		bool BilinearFilter:1;
+		//! Minification (downscaling) filter
+		E_TEXTURE_MIN_FILTER MinFilter;
 
-		//! Is trilinear filtering enabled? Default: false
-		/** If the trilinear filter flag is enabled,
-		the bilinear filtering flag is ignored. */
-		bool TrilinearFilter:1;
+		//! Magnification (upscaling) filter
+		E_TEXTURE_MAG_FILTER MagFilter;
 
 		//! Is anisotropic filtering enabled? Default: 0, disabled
 		/** In Irrlicht you can use anisotropic texture filtering
@@ -207,6 +231,16 @@ namespace video
 		chosen initially, and thus takes a smaller mipmap for a region
 		if the value is positive. */
 		s8 LODBias;
+
+		//! Sets the MinFilter, MagFilter and AnisotropicFilter properties according
+		//! to the three relevant boolean values found in the Minetest settings.
+		/** The value of `trilinear` takes precedence over the value of `bilinear`. */
+		void setFiltersMinetest(bool bilinear, bool trilinear, bool anisotropic) {
+			MinFilter = trilinear ? ETMINF_LINEAR_MIPMAP_LINEAR :
+					(bilinear ? ETMINF_LINEAR_MIPMAP_NEAREST : ETMINF_NEAREST_MIPMAP_NEAREST);
+			MagFilter = (trilinear || bilinear) ? ETMAGF_LINEAR : ETMAGF_NEAREST;
+			AnisotropicFilter = anisotropic ? 0xFF : 0;
+		}
 
 	private:
 		friend class SMaterial;
